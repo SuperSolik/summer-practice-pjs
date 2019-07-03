@@ -1,14 +1,21 @@
+import graph.Graph;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+
 // Основное окно интерфейса
 class MainWindow extends JFrame {
     private DrawPanel panel;
     private JSlider speedSlider;
+    private JTable verticesList;
+    private Graph graph;
     MainWindow(){
-        setSize(640,640); //поменять потом
+        setSize(800,640); //поменять потом
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Kosaraju algorithm");
         panel = new DrawPanel();
-        panel.setSize(600,600);
+        panel.setMinimumSize(new Dimension(600,600));
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel,BoxLayout.Y_AXIS));
         rightPanel.add(new JLabel("Скорость анимации"));
@@ -17,7 +24,25 @@ class MainWindow extends JFrame {
         speedSlider.setMajorTickSpacing(50);
         speedSlider.setPaintTicks(true);
         speedSlider.setPaintLabels(true);
-        rightPanel.add(speedSlider);
+        {
+            JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            panel.add(speedSlider);
+            rightPanel.add(panel);
+            rightPanel.add(new JPanel());
+        }
+//        rightPanel.add(speedSlider);
+        DefaultTableModel model = new DefaultTableModel();
+        verticesList = new JTable(model);
+//        var a = new TableColumn();
+//        a.setHeaderValue("Vertex name");
+//        verticesList.addColumn(a);
+        model.addColumn("Name");
+        for(int i = 0 ; i < 100 ; i++)model.addRow(new Object[]{""+i});
+        {
+            var jsp = new JScrollPane(verticesList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            jsp.setPreferredSize(new Dimension(300,300));
+            rightPanel.add(jsp);
+        }
         JButton algoButton = new JButton("Algo");
 //        algoButton.setAction(); // TODO set action on button
         rightPanel.add(algoButton);

@@ -1,46 +1,43 @@
 package graph;
 
 public class Edge{
-    private Vertex from = null;
-    private Vertex to = null;
+    private Vertex source,dest;
 
-    public Edge(Vertex from, Vertex to) {
-        if (from == null || to == null)
-            throw (new NullPointerException("Both 'to' and 'from' vertices need to be non-NULL."));
-
-        this.from = from;
-        this.to = to;
+    public Edge(Vertex source, Vertex dest) {
+        if (source == null || dest == null)
+            throw (new NullPointerException("Both 'dest' and 'source' vertices need dest be non-NULL."));
+        this.source = source;
+        this.dest = dest;
     }
-
+    @Deprecated
     public Edge(Edge e) {
-        this(e.from, e.to);
+        this(e.source, e.dest);
     }
 
-    public Vertex getFromVertex() {
-        return from;
+    public Vertex getSource() {
+        return source;
     }
 
-    public Vertex getToVertex() {
-        return to;
+    public Vertex getDest() {
+        return dest;
     }
 
     public void invert(){
-        Vertex temp = to;
-        to = from;
-        from = temp;
+        //TODO учти что edge хранится еще и в вершине
+        Vertex temp = dest;
+        dest = source;
+        source = temp;
     }
 
     @Override
     public int hashCode() {
-        final int cost = (this.getFromVertex().hashCode() * this.getToVertex().hashCode());
+        final int cost = (this.getSource().hashCode() * this.getDest().hashCode());
         return 31 * cost;
     }
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("[ ").append(from.getValue()).append("]").append(" -> ")
-                .append("[ ").append(to.getValue()).append("]").append(" = ").append("\n");
-        return builder.toString();
+        return "[ " + source.getName() + "]" + " -> " +
+                "[ " + dest.getName() + "]" + " = " + "\n";
     }
 }

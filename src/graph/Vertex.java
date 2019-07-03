@@ -5,30 +5,30 @@ import java.util.List;
 
 public class Vertex{
 
-    private float x;
-    private float y;
+    private float x,y;
+    private String name;
+    private List<Edge> edges = new ArrayList<>(); //это исходящие или вообще все?
 
-    private String value = null;
-    private List<Edge> edges = new ArrayList<>();
-
-    public Vertex(String value) {
-        this.value = value;
+    public Vertex(String name) {
+        this.name = name;
     }
 
-    public Vertex(String value, float x, float y) {
-        this.value = value;
+    public Vertex(String name, float x, float y) {
+        this.name = name;
         this.x = x;
         this.y = y;
     }
-
+    @Deprecated
     public Vertex(Vertex vertex) {
-        this(vertex.value, vertex.x, vertex.y);
-
+        this(vertex.name, vertex.x, vertex.y);
         this.edges.addAll(vertex.edges);
     }
 
-    public String getValue() {
-        return value;
+    public String getName() {
+        return name;
+    }
+    public void setName(String name){
+        this.name = name;
     }
 
     public void addEdge(Edge e) {
@@ -41,7 +41,7 @@ public class Vertex{
 
     public Edge getEdge(Vertex v) {
         for (Edge e : edges) {
-            if (e.getToVertex().equals(v))
+            if (e.getDest().equals(v))
                 return e;
         }
         return null;
@@ -63,9 +63,9 @@ public class Vertex{
         this.y = y;
     }
 
-    public boolean pathTo(Vertex v) {
+    public boolean isConnected(Vertex v) {
         for (Edge e : edges) {
-            if (e.getToVertex().equals(v))
+            if (e.getDest().equals(v))
                 return true;
         }
         return false;
@@ -73,14 +73,14 @@ public class Vertex{
 
     @Override
     public int hashCode() {
-        final int code = this.value.hashCode() + this.edges.size();
+        final int code = this.name.hashCode() + this.edges.size();
         return 31 * code;
     }
 
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
-        builder.append("Value=").append(value).append("\n");
+        builder.append("Value=").append(name).append("\n");
         for (Edge e : edges)
             builder.append("\t").append(e.toString());
         return builder.toString();

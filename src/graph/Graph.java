@@ -5,87 +5,108 @@ import java.util.Collection;
 import java.util.List;
 
 public class Graph{
+    /*
+     Нам не нужна куча конструкторов
+     Мы либо создаем пустой граф при запуске
+     Либо считываем его из файла
+     Никто его не будет копировать или делать из готовых коллекций
+     Которые нам не понадобятся я пометил как Deprecated
+     */
+    private List<Vertex> vertices;
+    private List<Edge> edges;
 
-    private List<Vertex> allVertices = new ArrayList<>();
-    private List<Edge> allEdges = new ArrayList<>();
+//    public enum TYPE {
+//        DIRECTED, UNDIRECTED
+//    }
 
-    public enum TYPE {
-        DIRECTED, UNDIRECTED
+//    private TYPE type = TYPE.DIRECTED;
+    private boolean isDirected = true;
+
+    public Graph() {
+        edges = new ArrayList<>();
+        vertices = new ArrayList<>();
     }
-
-    private TYPE type = TYPE.DIRECTED;
-
-    public Graph() { }
-
-    public Graph(TYPE type) {
-        this.type = type;
+    public Graph(boolean isDirected) {
+       this();
+       this.isDirected = isDirected;
     }
-
+    @Deprecated
     public Graph(Graph g) {
-        type = g.getType();
+        isDirected = g.isDirected();
         for (Vertex v : g.getVertices())
-            this.allVertices.add(new Vertex(v));
+            this.vertices.add(new Vertex(v));
 
         for (Vertex v : this.getVertices()) {
-            for (Edge e : v.getEdges()) {
-                this.allEdges.add(e);
-            }
+            this.edges.addAll(v.getEdges());
         }
     }
-
+    @Deprecated
     public Graph(Collection<Vertex> vertices, Collection<Edge> edges) {
-        this(TYPE.DIRECTED, vertices, edges);
+        this(true, vertices, edges);
     }
+    @Deprecated
+    public Graph(boolean isDirected, Collection<Vertex> vertices, Collection<Edge> edges) {
+        this(isDirected);
 
-    public Graph(TYPE type, Collection<Vertex> vertices, Collection<Edge> edges) {
-        this(type);
-
-        this.allVertices.addAll(vertices);
-        this.allEdges.addAll(edges);
+        this.vertices.addAll(vertices);
+        this.edges.addAll(edges);
 
         for (Edge e : edges) {
-            final Vertex from = e.getFromVertex();
-            final Vertex to = e.getToVertex();
+            final Vertex from = e.getSource();
+            final Vertex to = e.getDest();
 
-            if (!this.allVertices.contains(from) || !this.allVertices.contains(to))
+            if (!this.vertices.contains(from) || !this.vertices.contains(to))
                 continue;
 
             from.addEdge(e);
-            if (this.type == TYPE.UNDIRECTED) {
+            if (!this.isDirected) {
                 Edge reciprical = new Edge(to, from);
                 to.addEdge(reciprical);
-                this.allEdges.add(reciprical);
+                this.edges.add(reciprical);
             }
         }
     }
 
-    public TYPE getType() {
-        return type;
+    public boolean createVertex(String name, float x, float y){
+        //TODO добавление в граф вершины с именем и координатами
+        // возвращает false если есть нода с таким именем
+        return false;
+    }
+    public boolean createEdge(String src, String dest){
+        //TODO соединяет две вершины с данными именами (для удобного считывания с файла)
+        return false;
+    }
+    public boolean createEdge(Vertex src, Vertex dest){
+        //TODO соединяет по ссылкам (для GUI)
+        return false;
+    }
+
+    public boolean isDirected() {
+        return isDirected;
     }
 
     public List<Vertex> getVertices() {
-        return allVertices;
+        return vertices;
     }
 
     public List<Edge> getEdges() {
-        return allEdges;
+        return edges;
     }
 
     @Override
     public int hashCode() {
-        int code = this.type.hashCode() + this.allVertices.size() + this.allEdges.size();
-        for (Vertex v : allVertices)
+        int code = ((Boolean)this.isDirected).hashCode() + this.vertices.size() + this.edges.size();
+        for (Vertex v : vertices)
             code *= v.hashCode();
-        for (Edge e : allEdges)
+        for (Edge e : edges)
             code *= e.hashCode();
         return 31 * code;
     }
 
-
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
-        for (Vertex v : allVertices)
+        for (Vertex v : vertices)
             builder.append(v.toString());
         return builder.toString();
     }

@@ -10,7 +10,7 @@ public class DrawPanel extends JPanel {
         p[1] = new GradientPaint(150,300,Color.YELLOW,300,300,Color.GREEN);
         p[2] = new GradientPaint(300,300,Color.GREEN,450,300,Color.BLUE);
         p[3] = new GradientPaint(450,300,Color.BLUE,600,300,Color.MAGENTA);
-        setMinimumSize(new Dimension(600,600));
+        setPreferredSize(new Dimension(600,600));
     }
     @Override
     public void paint(Graphics g) {
@@ -20,6 +20,6 @@ public class DrawPanel extends JPanel {
             g.fillRect(i*150,0,150,600);
         }
         g.setColor(Color.BLACK);
-        g.drawString("Панелька графа",200,300);
+        g.drawString("Здесь будет граф",200,300);
     }
 }
