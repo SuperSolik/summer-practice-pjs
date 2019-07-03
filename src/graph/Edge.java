@@ -25,9 +25,9 @@ public class Edge{
     }
 
     public void invert(){
-        Vertex temp = new Vertex(to);
-        to = new Vertex(from);
-        from = new Vertex(temp);
+        Vertex temp = to;
+        to = from;
+        from = temp;
     }
 
     @Override
