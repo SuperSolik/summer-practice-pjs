@@ -12,11 +12,7 @@ Java summer practice 2019
 ## Меню
 File | Open, Save, Save as...
 > **Формат файла .ogf** — усовершенствованная форма списков инцидентности:
-> 1-ая строка "random" или "сoordinates"
-> Формат всех остальных строк в случае
-> - random
-> {nodeName} {destinatonNodeName_1} ... {destinatonNodeName_N} 
-> - coordinates
+>
 > {nodeName} {x} {y} {destinatonNodeName_1} ... {destinatonNodeName_N}
 
 1. Open . Открывает файл в данном формате
