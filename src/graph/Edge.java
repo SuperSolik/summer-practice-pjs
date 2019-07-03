@@ -24,7 +24,7 @@ public class Edge{
         return to;
     }
 
-    void invert(){
+    public void invert(){
         Vertex temp = new Vertex(to);
         to = new Vertex(from);
         from = new Vertex(temp);
