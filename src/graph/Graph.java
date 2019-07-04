@@ -115,6 +115,12 @@ public class Graph{
         return null;
     }
 
+    public void invert(){
+        for(Edge e : edges){
+            e.invert();
+        }
+    }
+
     @Override
     public int hashCode() {
         int code = ((Boolean)this.isDirected).hashCode() + this.vertices.size() + this.edges.size();
