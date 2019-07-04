@@ -1,8 +1,6 @@
 package graph;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class Graph{
     /*
@@ -29,6 +27,11 @@ public class Graph{
     public Graph(boolean isDirected) {
        this();
        this.isDirected = isDirected;
+    }
+
+    static Graph fromFile(String filename){
+        //TODO реализация считывания из файла
+        return null;
     }
     @Deprecated
     public Graph(Graph g) {
@@ -68,17 +71,28 @@ public class Graph{
     }
 
     public boolean createVertex(String name, float x, float y){
-        //TODO добавление в граф вершины с именем и координатами
-        // возвращает false если есть нода с таким именем
+        if(getVertex(name) == null){
+            Vertex v = new Vertex(name, x, y);
+            vertices.add(v);
+            return true;
+        }
         return false;
     }
     public boolean createEdge(String src, String dest){
-        //TODO соединяет две вершины с данными именами (для удобного считывания с файла)
-        return false;
+        Vertex from = getVertex(src);
+        Vertex to = getVertex(dest);
+        if(from.isConnected(to)) return false;
+        Edge e = new Edge(from, to);
+        from.addEdge(e);
+        edges.add(e);
+        return true;
     }
     public boolean createEdge(Vertex src, Vertex dest){
-        //TODO соединяет по ссылкам (для GUI)
-        return false;
+        if(src.isConnected(dest)) return false;
+        Edge e = new Edge(src, dest);
+        src.addEdge(e);
+        edges.add(e);
+        return true;
     }
 
     public boolean isDirected() {
@@ -91,6 +105,20 @@ public class Graph{
 
     public List<Edge> getEdges() {
         return edges;
+    }
+
+    public Vertex getVertex(String name){
+        for(Vertex v : vertices){
+            if(v.getName().equals(name))
+                return v;
+        }
+        return null;
+    }
+
+    public void invert(){
+        for(Edge e : edges){
+            e.invert();
+        }
     }
 
     @Override
