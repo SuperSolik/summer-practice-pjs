@@ -4,12 +4,15 @@ Java summer practice 2019
 
 7303 | Юсковец Антай, Петров Сергей, Шаломов Артем. **Алгоритм Косарайю**
 
-# Диграмма классов
+# Диграмма Классов
+https://picasaweb.google.com/116989145762805181977/6709825988631141697#6709825992156927922
 ![UML](https://picasaweb.google.com/116989145762805181977/6709825988631141697#6709825992156927922 "UML")
 
 # Пользовательский Интерфейс
 Разработка пользовательского интерфейса ведется на *swing*.
+https://lh3.googleusercontent.com/pGD0lnWfP8XHH-yzq8S-x77IxxRDr2wQn_AdpWfwhatnwT8YhlvTJMb_hLtcZjMWQLxN6OkWvMwY
 ![disign](https://lh3.googleusercontent.com/pGD0lnWfP8XHH-yzq8S-x77IxxRDr2wQn_AdpWfwhatnwT8YhlvTJMb_hLtcZjMWQLxN6OkWvMwY "Дизайн с behaviour guide'ом")
+
 
 ## Меню
 File | Open, Save, Save as...
