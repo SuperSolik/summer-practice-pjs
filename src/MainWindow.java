@@ -1,8 +1,13 @@
 import graph.Graph;
+import graph.Vertex;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 // Основное окно интерфейса
 class MainWindow extends JFrame {
@@ -11,6 +16,8 @@ class MainWindow extends JFrame {
     private JTable verticesList;
     private Graph graph;
     MainWindow(){
+        this.graph = new Graph();
+
         setSize(800,640); //поменять потом
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Kosaraju algorithm");
@@ -53,13 +60,18 @@ class MainWindow extends JFrame {
         add(mainPanel);
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar);
+
+        // file menu
         JMenu fileMenu = new JMenu("File");
         JMenuItem item = new JMenuItem("Import graph");
-//        item.setAction();
+        item.addActionListener(new ImportGraphAction(this.graph));
         fileMenu.add(item);
+
         item = new JMenuItem("Export graph");
 //        item.setAction();
         fileMenu.add(item);
+
+        // settings menu
         JMenu settingsMenu = new JMenu("Settings");
         JMenu helpMenu = new JMenu("About");
         item = new JMenuItem("Help");
@@ -72,5 +84,54 @@ class MainWindow extends JFrame {
         menuBar.add(settingsMenu);
         menuBar.add(helpMenu);
         setVisible(true);
+    }
+
+    class ImportGraphAction extends AbstractAction {
+        Graph graph;
+
+        ImportGraphAction(Graph graph) {
+            this.graph = graph;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            JFileChooser fileChooser = new JFileChooser();
+            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+
+                try (Scanner fileScanner = new Scanner(selectedFile)) {
+                    while (fileScanner.hasNextLine()) {
+                        String rowLine = fileScanner.nextLine();
+                        if (rowLine.isEmpty()) {
+                            return;
+                        }
+
+                        String[] splitLine = rowLine.split(" ");
+
+                        String originVertexName = splitLine[0];
+                        int originVertexX = Integer.valueOf(splitLine[1]);
+                        int originVertexY = Integer.valueOf(splitLine[2]);
+
+                        boolean vertexCreated = this.graph.createVertex(
+                            originVertexName,
+                            originVertexX,
+                            originVertexY
+                        );
+
+                        if (!vertexCreated) { // vertex was created in previous iterations
+                            Vertex originVertex = this.graph.getVertex(originVertexName);
+                            originVertex.setX(originVertexX);
+                            originVertex.setY(originVertexY);
+                        }
+
+                        for (int i = 3; i != splitLine.length; ++i) {
+                            String destVertexName = splitLine[i];
+                            this.graph.createVertex(destVertexName);
+                            this.graph.createEdge(originVertexName, destVertexName);
+                        }
+                    }
+                } catch (FileNotFoundException err) {/* never reaches, because file selected by user */}
+            }
+        }
     }
 }

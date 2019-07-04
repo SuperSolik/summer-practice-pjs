@@ -80,7 +80,10 @@ public class Vertex{
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
-        builder.append("Value=").append(name).append("\n");
+        builder.append("Value=").append(name)
+                .append(" x: ").append(this.x)
+                .append(" y: ").append(this.y)
+                .append("\n");
         for (Edge e : edges)
             builder.append("\t").append(e.toString());
         return builder.toString();

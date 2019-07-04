@@ -5,9 +5,9 @@ import java.util.*;
 public class Graph{
     /*
      Нам не нужна куча конструкторов
+     Никто его не будет копировать или делать из готовых коллекций
      Мы либо создаем пустой граф при запуске
      Либо считываем его из файла
-     Никто его не будет копировать или делать из готовых коллекций
      Которые нам не понадобятся я пометил как Deprecated
      */
     private List<Vertex> vertices;
@@ -29,10 +29,6 @@ public class Graph{
        this.isDirected = isDirected;
     }
 
-    static Graph fromFile(String filename){
-        //TODO реализация считывания из файла
-        return null;
-    }
     @Deprecated
     public Graph(Graph g) {
         isDirected = g.isDirected();
@@ -78,6 +74,11 @@ public class Graph{
         }
         return false;
     }
+
+    public boolean createVertex(String name) {
+        return createVertex(name, 0, 0);
+    }
+
     public boolean createEdge(String src, String dest){
         Vertex from = getVertex(src);
         Vertex to = getVertex(dest);
@@ -87,6 +88,7 @@ public class Graph{
         edges.add(e);
         return true;
     }
+
     public boolean createEdge(Vertex src, Vertex dest){
         if(src.isConnected(dest)) return false;
         Edge e = new Edge(src, dest);
