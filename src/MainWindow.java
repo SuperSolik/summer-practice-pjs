@@ -21,7 +21,7 @@ class MainWindow extends JFrame {
         setSize(800,640); //поменять потом
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Kosaraju algorithm");
-        panel = new DrawPanel();
+        panel = new DrawPanel(graph);
         panel.setMinimumSize(new Dimension(600,600));
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel,BoxLayout.Y_AXIS));
@@ -84,6 +84,22 @@ class MainWindow extends JFrame {
         menuBar.add(settingsMenu);
         menuBar.add(helpMenu);
         setVisible(true);
+        new Thread(this::startUpdateCycle).start();
+    }
+    private void startUpdateCycle(){
+        try {
+            while (this.isEnabled()) {
+                panel.repaint();
+                for(Vertex v : graph.getVertices()){
+                    if(v.getX()<0)v.setX(1);
+                    if(v.getX()>DrawPanel.FRAME_WIDTH)v.setX(DrawPanel.FRAME_WIDTH-1);
+                    if(v.getX()<0)v.setY(1);
+                    if(v.getY()>DrawPanel.FRAME_HEIGHT)v.setY(DrawPanel.FRAME_HEIGHT-1);
+                }
+                //calculate forces
+                Thread.sleep(20);
+            }
+        }catch (InterruptedException e){e.printStackTrace();}
     }
 
     class ImportGraphAction extends AbstractAction {
