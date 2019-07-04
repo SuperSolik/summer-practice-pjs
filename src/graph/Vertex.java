@@ -7,7 +7,7 @@ public class Vertex{
 
     private float x,y;
     private String name;
-    private List<Edge> edges = new ArrayList<>(); //это исходящие или вообще все?
+    private List<Edge> edges = new ArrayList<>();
 
     public Vertex(String name) {
         this.name = name;

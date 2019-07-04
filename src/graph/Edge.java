@@ -37,7 +37,7 @@ public class Edge{
 
     @Override
     public String toString() {
-        return "[ " + source.getName() + "]" + " -> " +
-                "[ " + dest.getName() + "]" + " = " + "\n";
+        return "[" + source.getName() + "]" + " -> " +
+                "[" + dest.getName() + "]" + "\n";
     }
 }
