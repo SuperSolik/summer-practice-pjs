@@ -156,8 +156,8 @@ class MainWindow extends JFrame {
 //                    for(Vector v : states){
 //                        System.out.println(v);
 //                    }
+//                    graph.getVertices().forEach(e -> System.out.print(e.getName() + " "));
 //                  если хотите сами посмотреть как работает
-                    graph.getVertices().forEach(e -> System.out.print(e.getName() + " "));
                 } catch (FileNotFoundException err) {/* never reaches, because file selected by user */}
             }
         }
