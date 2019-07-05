@@ -1,3 +1,4 @@
+import graph.Edge;
 import graph.Graph;
 import graph.Vertex;
 
@@ -8,6 +9,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 // Основное окно интерфейса
@@ -64,12 +67,13 @@ class MainWindow extends JFrame {
 
         // file menu
         JMenu fileMenu = new JMenu("File");
+
         JMenuItem item = new JMenuItem("Import graph");
         item.addActionListener(new ImportGraphAction(this.graph));
         fileMenu.add(item);
 
         item = new JMenuItem("Export graph");
-//        item.setAction();
+        item.addActionListener(new ExportGraphAction(this.graph));
         fileMenu.add(item);
 
         // settings menu
@@ -150,6 +154,38 @@ class MainWindow extends JFrame {
                         }
                     }
                 } catch (FileNotFoundException err) {/* never reaches, because file selected by user */}
+            }
+        }
+    }
+
+    class ExportGraphAction extends AbstractAction {
+        Graph graph;
+
+        ExportGraphAction(Graph graph) {
+            this.graph = graph;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileFilter(new FileNameExtensionFilter("Graph file", "ogf"));
+            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+
+                try (FileWriter fileWriter = new FileWriter(selectedFile);) {
+                    for (Vertex origin : this.graph.getVertices()) {
+                        StringBuilder lineBuilder = new StringBuilder();
+                        lineBuilder.append(origin.getName())
+                                .append(" " + (int)origin.getX())
+                                .append(" " + (int)origin.getY());
+
+                        for (Edge edge : origin.getEdges()) {
+                            lineBuilder.append(' ' + edge.getDest().getName());
+                        }
+
+                        fileWriter.write(lineBuilder.toString() + '\n');
+                    }
+                } catch (IOException err) {/* never reaches, because file selected by user */}
             }
         }
     }
