@@ -2,6 +2,7 @@ import graph.Graph;
 import graph.Vertex;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -112,10 +113,12 @@ class MainWindow extends JFrame {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileFilter(new FileNameExtensionFilter("Graph file", "ogf"));
             if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = fileChooser.getSelectedFile();
 
                 try (Scanner fileScanner = new Scanner(selectedFile)) {
+                    this.graph.clear();
                     while (fileScanner.hasNextLine()) {
                         String rowLine = fileScanner.nextLine();
                         if (rowLine.isEmpty()) {

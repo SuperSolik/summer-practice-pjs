@@ -123,6 +123,11 @@ public class Graph{
         }
     }
 
+    public void clear() {
+        edges.clear();
+        vertices.clear();
+    }
+
     @Override
     public int hashCode() {
         int code = ((Boolean)this.isDirected).hashCode() + this.vertices.size() + this.edges.size();

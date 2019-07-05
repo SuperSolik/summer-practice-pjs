@@ -3,7 +3,7 @@ package graph;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Vertex{
+public class Vertex {
 
     private float x,y;
     private String name;
