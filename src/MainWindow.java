@@ -152,6 +152,12 @@ class MainWindow extends JFrame {
                             this.graph.createEdge(originVertexName, destVertexName);
                         }
                     }
+//                    var states = algo.DFS(graph, verticesList);
+//                    for(Vector v : states){
+//                        System.out.println(v);
+//                    }
+//                  если хотите сами посмотреть как работает
+                    graph.getVertices().forEach(e -> System.out.print(e.getName() + " "));
                 } catch (FileNotFoundException err) {/* never reaches, because file selected by user */}
             }
         }
