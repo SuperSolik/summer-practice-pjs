@@ -18,33 +18,20 @@ public class GraphAlgo {
     }
 
     public void DFS(Graph graph, JTable list) {
-        int time = 0;
-        for (Vertex v : graph.getVertices()) {
-            if (v.getColor() == Color.WHITE) {
-                visit(v, list, time);
-            }
-        }
         for(Vertex v : graph.getVertices()){
-            System.out.println(v.getColor() == Color.BLACK);
+            if(v.getColor() == Color.WHITE)
+                visit(v);
         }
     }
 
-    private void visit(Vertex v, JTable list, int time) {
-        Stack<Vertex> stack = new Stack<>();
-        Vertex current;
-        stack.push(v);
-        while(!stack.empty()) {
-            current = stack.pop();
-            if(current.getColor() == Color.WHITE){
-                current.setColor(Color.BLACK);
-            }
-
-            for (Edge e : v.getEdges()) {
-                Vertex temp = e.getDest();
-                if (temp.getColor() == Color.WHITE) {
-                    stack.push(temp);
-                }
-            }
+    private void visit(Vertex v) {
+        v.setColor(Color.BLACK);
+        //TODO здесь создать состояние
+        for (Edge e : v.getEdges()) {
+            System.out.println(e);
+            if(e.getDest().getColor() == Color.WHITE)
+                visit(e.getDest());
         }
+        //TODO здесь время выхода
     }
 }
