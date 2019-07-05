@@ -1,5 +1,6 @@
 import graph.Edge;
 import graph.Graph;
+import graph.GraphAlgo;
 import graph.Vertex;
 
 import javax.swing.*;
@@ -19,8 +20,10 @@ class MainWindow extends JFrame {
     private JSlider speedSlider;
     private JTable verticesList;
     private Graph graph;
+    private GraphAlgo algo;
     MainWindow(){
         this.graph = new Graph();
+        this.algo = new GraphAlgo();
 
         setSize(800,640); //поменять потом
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -153,6 +156,12 @@ class MainWindow extends JFrame {
                             this.graph.createEdge(originVertexName, destVertexName);
                         }
                     }
+//                    var states = algo.DFS(graph, verticesList);
+//                    for(Vector v : states){
+//                        System.out.println(v);
+//                    }
+//                    graph.getVertices().forEach(e -> System.out.print(e.getName() + " "));
+//                  если хотите сами посмотреть как работает
                 } catch (FileNotFoundException err) {/* never reaches, because file selected by user */}
             }
         }

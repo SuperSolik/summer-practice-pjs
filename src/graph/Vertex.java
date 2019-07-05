@@ -1,5 +1,6 @@
 package graph;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +9,7 @@ public class Vertex {
     private float x,y;
     private String name;
     private List<Edge> edges = new ArrayList<>();
+    private Color color;
 
     public Vertex(String name) {
         this.name = name;
@@ -17,6 +19,7 @@ public class Vertex {
         this.name = name;
         this.x = x;
         this.y = y;
+        this.color = Color.WHITE;
     }
     @Deprecated
     public Vertex(Vertex vertex) {
@@ -61,6 +64,14 @@ public class Vertex {
 
     public void setY(float y) {
         this.y = y;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     public boolean isConnected(Vertex v) {
