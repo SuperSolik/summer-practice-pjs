@@ -17,7 +17,7 @@ public class Graph{
 //        DIRECTED, UNDIRECTED
 //    }
 
-//    private TYPE type = TYPE.DIRECTED;
+    //    private TYPE type = TYPE.DIRECTED;
     private boolean isDirected = true;
 
     public Graph() {
@@ -25,8 +25,8 @@ public class Graph{
         vertices = new ArrayList<>();
     }
     public Graph(boolean isDirected) {
-       this();
-       this.isDirected = isDirected;
+        this();
+        this.isDirected = isDirected;
     }
 
     @Deprecated
@@ -94,6 +94,13 @@ public class Graph{
         Edge e = new Edge(src, dest);
         src.addEdge(e);
         edges.add(e);
+        return true;
+    }
+    public boolean removeEdge(Vertex src, Vertex dest){
+        if(!src.isConnected(dest))return false;
+        Edge delEdge = src.getEdge(dest);
+        src.getEdges().remove(delEdge);
+        edges.remove(delEdge);
         return true;
     }
 

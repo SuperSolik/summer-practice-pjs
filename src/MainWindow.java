@@ -100,9 +100,9 @@ class MainWindow extends JFrame {
                 panel.repaint();
                 for(Vertex v : graph.getVertices()){
                     if(v.getX()<0)v.setX(1);
-                    if(v.getX()>DrawPanel.FRAME_WIDTH)v.setX(DrawPanel.FRAME_WIDTH-1);
-                    if(v.getX()<0)v.setY(1);
-                    if(v.getY()>DrawPanel.FRAME_HEIGHT)v.setY(DrawPanel.FRAME_HEIGHT-1);
+                    if(v.getX()>DrawPanel.FRAME_WIDTH-DrawPanel.VERTEX_SIZE/2)v.setX(DrawPanel.FRAME_WIDTH-DrawPanel.VERTEX_SIZE/2);
+                    if(v.getY()<0)v.setY(1);
+                    if(v.getY()>DrawPanel.FRAME_HEIGHT-DrawPanel.VERTEX_SIZE/2)v.setY(DrawPanel.FRAME_HEIGHT-DrawPanel.VERTEX_SIZE/2);
                 }
                 //calculate forces
                 Thread.sleep(20);
@@ -139,9 +139,9 @@ class MainWindow extends JFrame {
                         int originVertexY = Integer.valueOf(splitLine[2]);
 
                         boolean vertexCreated = this.graph.createVertex(
-                            originVertexName,
-                            originVertexX,
-                            originVertexY
+                                originVertexName,
+                                originVertexX,
+                                originVertexY
                         );
 
                         if (!vertexCreated) { // vertex was created in previous iterations
@@ -156,6 +156,12 @@ class MainWindow extends JFrame {
                             this.graph.createEdge(originVertexName, destVertexName);
                         }
                     }
+//                    var states = algo.DFS(graph, verticesList);
+//                    for(Vector v : states){
+//                        System.out.println(v);
+//                    }
+//                    graph.getVertices().forEach(e -> System.out.print(e.getName() + " "));
+//                  если хотите сами посмотреть как работает
                 } catch (FileNotFoundException err) {/* never reaches, because file selected by user */}
             }
         }
