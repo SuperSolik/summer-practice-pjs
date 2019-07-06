@@ -12,16 +12,7 @@ public class GraphAlgo {
 
     public GraphAlgo() { }
 
-
-    private void DFS1_step() {
-        //TODO реализовать
-    }
-
-    private void DFS2_step() {
-        //TODO реализовать
-    }
-
-    public Vector<Vector<Color>> DFS(Graph graph, JTable list) {
+    public Vector<Vector<Color>> DFS1_step(Graph graph, JTable list) {
         states = new Vector<>();
         this.graph = graph;
         time = 0;
@@ -33,6 +24,11 @@ public class GraphAlgo {
                 visit(v, list);
         }
         return states;
+    }
+
+
+    private void DFS2_step() {
+        //TODO реализовать
     }
 
     private void visit(Vertex v, JTable list) {
