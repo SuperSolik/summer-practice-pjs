@@ -39,6 +39,9 @@ public class GraphAlgo {
         graph.invert();
         var states1 = DFS1_step(graph, list);
         graph.invert();
+        for(Vertex v : graph.getVertices()){
+            v.setColor(Color.WHITE);
+        }
         var states2 = DFS2_step(graph, list);
         Vector<Vector<Color>> all_states = new Vector<>();
         all_states.addAll(states1);
