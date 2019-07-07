@@ -19,6 +19,7 @@ class MainWindow extends JFrame {
     private GraphAlgo algo = new GraphAlgo();
     private ArrayList<ArrayList<Color>> stages = new ArrayList<>();
     private int currentGraphState = 0, stateTimer;
+//    private boolean autoStep = false;
 
     MainWindow(){
         setSize(800,640); //поменять потом
@@ -83,7 +84,7 @@ class MainWindow extends JFrame {
         fileMenu.add(item);
 
         item = new JMenuItem("Export graph");
-        item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+        item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
         item.addActionListener(new ExportGraphAction(this.graph));
         fileMenu.add(item);
 
@@ -111,7 +112,7 @@ class MainWindow extends JFrame {
                     else {
                         panel.updateColors(stages.get(currentGraphState));
                         stateTimer++;
-                        if (stateTimer >= speedSlider.getValue() + 1) {
+                        if (stateTimer >= 101 - speedSlider.getValue()) {
                             stateTimer = 0;
                             if (currentGraphState < stages.size() - 1)
                                 currentGraphState++;
@@ -126,8 +127,6 @@ class MainWindow extends JFrame {
                     if(v.getY()<0)v.setY(1);
                     if(v.getY()>DrawPanel.FRAME_HEIGHT-DrawPanel.VERTEX_SIZE/2)v.setY(DrawPanel.FRAME_HEIGHT-DrawPanel.VERTEX_SIZE/2);
                 }
-                //calculate forces
-//                Thread.sleep(20);
                 Thread.sleep(20);
             }
         }catch (InterruptedException e){e.printStackTrace();}

@@ -15,18 +15,21 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
     static final int VERTEX_SIZE = 20, ARROW_SIZE = 10;
     static final int FRAME_WIDTH = 600, FRAME_HEIGHT = 600;
     private Paint[] p;
+    private Paint backgroundPaint;
     private Graph graph;
     private ArrayList<Color> verticesColors;
     private Vertex selectedVertex, editVertex;
     private PopUpPanel vertexMenu, canvasMenu;
-    private int editVertexMarkerSize = 2*VERTEX_SIZE;
-    private int[] arrowXs,arrowYs;
+    private int editVertexMarkerSize = 2 * VERTEX_SIZE;
+    private int[] arrowXs, arrowYs;
+
     DrawPanel(Graph graph) {
         p = new GradientPaint[4];
         p[0] = new GradientPaint(0, 300, Color.RED, 150, 300, Color.YELLOW);
         p[1] = new GradientPaint(150, 300, Color.YELLOW, 300, 300, Color.GREEN);
         p[2] = new GradientPaint(300, 300, Color.GREEN, 450, 300, Color.BLUE);
         p[3] = new GradientPaint(450, 300, Color.BLUE, 600, 300, Color.MAGENTA);
+        backgroundPaint = new GradientPaint(0,0,Color.WHITE,FRAME_WIDTH,FRAME_HEIGHT,new Color(180,180,180));
         arrowXs = new int[3];
         arrowYs = new int[3];
         setPreferredSize(new Dimension(600, 600));
@@ -45,51 +48,50 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
                         break;
                     }
                 }
-                if(e.getButton() == MouseEvent.BUTTON3){
-                    if(selectedVertex != null){
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    if (selectedVertex != null) {
                         vertexMenu.show(e.getX(), e.getY());
                         editVertex = selectedVertex;
                         canvasMenu.hide();
-                    }
-                    else {
-                        canvasMenu.show(e.getX(),e.getY());
+                    } else {
+                        canvasMenu.show(e.getX(), e.getY());
                         vertexMenu.hide();
                     }
                 }
-                if(e.getButton() == MouseEvent.BUTTON1){
-                    if (editVertex != null && selectedVertex != null && editVertex!=selectedVertex) {
-                        if(editVertex.isConnected(selectedVertex))
-                            graph.removeEdge(editVertex,selectedVertex);
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    if (editVertex != null && selectedVertex != null && editVertex != selectedVertex) {
+                        if (editVertex.isConnected(selectedVertex))
+                            graph.removeEdge(editVertex, selectedVertex);
                         else
-                            graph.createEdge(editVertex,selectedVertex);
+                            graph.createEdge(editVertex, selectedVertex);
                         editVertex = null;
                     }
-                    if(vertexMenu.isActive()){
-                        switch (vertexMenu.getMouseSelection()){
+                    if (vertexMenu.isActive()) {
+                        switch (vertexMenu.getMouseSelection()) {
                             case 0:
                                 break;
                             case 1:
-                                graph.getVertices().remove(editVertex);
+                                graph.removeVertex(editVertex);
                                 editVertex = null;
                                 break;
                             case 2:
-                                String result = JOptionPane.showInputDialog(null,"Write vertex name","",JOptionPane.QUESTION_MESSAGE);
-                                if(result!=null && result.length()>0)
+                                String result = getUniqueVerticeName(editVertex);
+                                if (result != null && !result.isEmpty())
                                     editVertex.setName(result);
                                 editVertex = null;
                                 break;
                             default:
                                 break;
                         }
-                        editVertexMarkerSize = 2*VERTEX_SIZE;
+                        editVertexMarkerSize = 2 * VERTEX_SIZE;
                         vertexMenu.hide();
                     }
-                    if(canvasMenu.isActive()){
-                        switch (canvasMenu.getMouseSelection()){
+                    if (canvasMenu.isActive()) {
+                        switch (canvasMenu.getMouseSelection()) {
                             case 0:
-                                String result = JOptionPane.showInputDialog(null,"Write vertex name","",JOptionPane.QUESTION_MESSAGE);
-                                if(result!=null && result.length()>0)
-                                    graph.getVertices().add(new Vertex(result,e.getX(),e.getY()));
+                                String result = getUniqueVerticeName(null);
+                                if (result != null && result.length() > 0)
+                                    graph.getVertices().add(new Vertex(result, e.getX(), e.getY()));
                                 break;
                             case 1:
                                 graph.clear();
@@ -125,7 +127,8 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
             }
         });
     }
-    public void updateColors(ArrayList<Color> verticesColors){
+
+    public void updateColors(ArrayList<Color> verticesColors) {
         this.verticesColors = verticesColors;
     }
 
@@ -138,53 +141,55 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
                 g.fillRect(i * 150, 0, 150, 600);
             }
         } else {
-            g.setColor(Color.WHITE);
+            ((Graphics2D)g).setPaint(backgroundPaint);
+//            g.setColor(Color.WHITE);
             g.fillRect(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
             ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g.setColor(Color.BLACK);
             for (Edge e : graph.getEdges()) {
                 g.drawLine((int) e.getSource().getX(), (int) e.getSource().getY(), (int) e.getDest().getX(), (int) e.getDest().getY());
-                if(graph.isDirected()){
-                    double dx = e.getSource().getX()-e.getDest().getX();
-                    double dy = e.getSource().getY()-e.getDest().getY();
-                    double length = Math.hypot(dx,dy);
-                    double angle = Math.acos(dx/length);
-                    if(dy>0)
-                        angle = 2*Math.PI - angle;
-                    arrowXs[2] = (int) (e.getDest().getX() + (dx*VERTEX_SIZE/2)/length);
-                    arrowYs[2] = (int) (e.getDest().getY() + (dy*VERTEX_SIZE/2)/length);
-                    arrowXs[0] = (int) ( arrowXs[2] - Math.sin(angle- Math.PI/3)*ARROW_SIZE);
-                    arrowYs[0] = (int) (arrowYs[2] - Math.cos(angle- Math.PI/3)*ARROW_SIZE);
-                    arrowXs[1] = (int) ( arrowXs[2] - Math.sin(angle - Math.PI + Math.PI/3)*ARROW_SIZE);
-                    arrowYs[1] = (int) (arrowYs[2] - Math.cos(angle - Math.PI + Math.PI/3)*ARROW_SIZE);
+                if (graph.isDirected()) {
+                    double dx = e.getSource().getX() - e.getDest().getX();
+                    double dy = e.getSource().getY() - e.getDest().getY();
+                    double length = Math.hypot(dx, dy);
+                    double angle = Math.acos(dx / length);
+                    if (dy > 0)
+                        angle = 2 * Math.PI - angle;
+                    arrowXs[2] = (int) (e.getDest().getX() + (dx * VERTEX_SIZE / 2) / length);
+                    arrowYs[2] = (int) (e.getDest().getY() + (dy * VERTEX_SIZE / 2) / length);
+                    arrowXs[0] = (int) (arrowXs[2] - Math.sin(angle - Math.PI / 3) * ARROW_SIZE);
+                    arrowYs[0] = (int) (arrowYs[2] - Math.cos(angle - Math.PI / 3) * ARROW_SIZE);
+                    arrowXs[1] = (int) (arrowXs[2] - Math.sin(angle - Math.PI + Math.PI / 3) * ARROW_SIZE);
+                    arrowYs[1] = (int) (arrowYs[2] - Math.cos(angle - Math.PI + Math.PI / 3) * ARROW_SIZE);
 
-                    g.fillPolygon(arrowXs,arrowYs,3);
+                    g.fillPolygon(arrowXs, arrowYs, 3);
                 }
-                //TODO приделать стрелочки
             }
-//            for (Vertex v : graph.getVertices()) {
-            for(int i = 0; i < graph.getVertices().size() ; i++){
-                Vertex v  = graph.getVertices().get(i);
-                if(verticesColors==null)
+            for (int i = 0; i < graph.getVertices().size(); i++) {
+                Vertex v = graph.getVertices().get(i);
+                if (verticesColors == null)
                     g.setColor(Color.lightGray);
                 else
                     g.setColor(verticesColors.get(i));
                 g.fillOval((int) v.getX() - VERTEX_SIZE / 2, (int) v.getY() - VERTEX_SIZE / 2, VERTEX_SIZE, VERTEX_SIZE);
-                g.setColor(Color.BLACK);
+                if(g.getColor()==Color.BLACK)
+                    g.setColor(Color.WHITE);
+                else
+                    g.setColor(Color.BLACK);
                 g.drawOval((int) v.getX() - VERTEX_SIZE / 2, (int) v.getY() - VERTEX_SIZE / 2, VERTEX_SIZE, VERTEX_SIZE);
                 g.drawString(v.getName(), (int) v.getX() - 10 * v.getName().length() / 2, (int) v.getY() + 5);
-                if(v == editVertex){
-                    g.drawOval((int) v.getX() -editVertexMarkerSize/4
-                            , (int) v.getY() - editVertexMarkerSize/4
-                            , editVertexMarkerSize/2
-                            , editVertexMarkerSize/2);
+                if (v == editVertex) {
+                    g.drawOval((int) v.getX() - editVertexMarkerSize / 4
+                            , (int) v.getY() - editVertexMarkerSize / 4
+                            , editVertexMarkerSize / 2
+                            , editVertexMarkerSize / 2);
                     editVertexMarkerSize++;
-                    if(editVertexMarkerSize > 4*VERTEX_SIZE) editVertexMarkerSize = 2*VERTEX_SIZE;
+                    if (editVertexMarkerSize > 4 * VERTEX_SIZE) editVertexMarkerSize = 2 * VERTEX_SIZE;
                 }
             }
         }
-        if(vertexMenu.isVisible)vertexMenu.draw(g);
-        if(canvasMenu.isVisible)canvasMenu.draw(g);
+        if (vertexMenu.isVisible) vertexMenu.draw(g);
+        if (canvasMenu.isVisible) canvasMenu.draw(g);
     }
 
     @Override
@@ -199,12 +204,30 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        if(vertexMenu.isVisible)
-            vertexMenu.updateMousePosition(e.getX(),e.getY());
-        if(canvasMenu.isVisible)
-            canvasMenu.updateMousePosition(e.getX(),e.getY());
+        if (vertexMenu.isVisible)
+            vertexMenu.updateMousePosition(e.getX(), e.getY());
+        if (canvasMenu.isVisible)
+            canvasMenu.updateMousePosition(e.getX(), e.getY());
         //System.out.println("move "+e.getX() + "\t" + e.getY());
 
+    }
+    private String getUniqueVerticeName(Vertex vertexToName){
+        String result;
+        validation:
+        while (true) {
+            result = JOptionPane.showInputDialog(null, "Write vertex name", vertexToName!=null?vertexToName.getName():"");//"", JOptionPane.QUESTION_MESSAGE);
+            if (result != null && result.length() > 0) {
+                for (var v : graph.getVertices()) {
+                    if (v != vertexToName && v.getName().equals(result)) {
+                        JOptionPane.showMessageDialog(null, "Vertices should have unique names", "Error", JOptionPane.ERROR_MESSAGE);
+                        continue validation;
+                    }
+                }
+                break;
+            } else
+                break;
+        }
+        return result;
     }
 
     class PopUpPanel {
@@ -222,7 +245,8 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
             isVisible = true;
             if (x + WIDTH > FRAME_WIDTH) this.x = FRAME_WIDTH - WIDTH;
             else this.x = x;
-            if (y + elements.length*ELEMENT_HEIGHT > FRAME_HEIGHT) this.y = FRAME_HEIGHT - elements.length*ELEMENT_HEIGHT;
+            if (y + elements.length * ELEMENT_HEIGHT > FRAME_HEIGHT)
+                this.y = FRAME_HEIGHT - elements.length * ELEMENT_HEIGHT;
             else this.y = y;
         }
 
@@ -240,8 +264,8 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
             r.width = WIDTH;
             r.height = ELEMENT_HEIGHT;
             for (int i = 0; i < elements.length; i++) {
-                r.y = this.y + i*ELEMENT_HEIGHT;
-                if(r.contains(x,y)){
+                r.y = this.y + i * ELEMENT_HEIGHT;
+                if (r.contains(x, y)) {
                     focusedElement = i;
                     return;
                 }
@@ -254,15 +278,15 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
         }
 
         void draw(Graphics g) {
-            for(int i = 0; i < elements.length; i++){
-                if(i == focusedElement)
+            for (int i = 0; i < elements.length; i++) {
+                if (i == focusedElement)
                     g.setColor(Color.LIGHT_GRAY);
                 else
                     g.setColor(Color.GRAY);
-                g.fillRect(x, y+i*ELEMENT_HEIGHT, WIDTH, ELEMENT_HEIGHT);
+                g.fillRect(x, y + i * ELEMENT_HEIGHT, WIDTH, ELEMENT_HEIGHT);
                 g.setColor(Color.BLACK);
-                g.drawRect(x, y+i*ELEMENT_HEIGHT, WIDTH, ELEMENT_HEIGHT);
-                g.drawString(elements[i],x+5,y+i*ELEMENT_HEIGHT + ELEMENT_HEIGHT/2);
+                g.drawRect(x, y + i * ELEMENT_HEIGHT, WIDTH, ELEMENT_HEIGHT);
+                g.drawString(elements[i], x + 5, y + i * ELEMENT_HEIGHT + ELEMENT_HEIGHT / 2);
             }
         }
     }

@@ -98,6 +98,12 @@ public class Graph {
         edges.remove(delEdge);
         return true;
     }
+    public boolean removeVertex(Vertex v){
+        if(!vertices.contains(v)) return false;
+        vertices.remove(v);
+        edges.removeIf(e -> e.getDest() ==v || e.getSource() == v);
+        return true;
+    }
 
     public boolean isDirected() {
         return isDirected;
