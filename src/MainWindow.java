@@ -1,4 +1,3 @@
-import actions.AlgoButtonAction;
 import actions.ExportGraphAction;
 import actions.FunctionalAction;
 import actions.ImportGraphAction;
@@ -10,8 +9,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 // Основное окно интерфейса
 class MainWindow extends JFrame {
