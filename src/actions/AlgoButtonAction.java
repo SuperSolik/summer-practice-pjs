@@ -27,6 +27,7 @@ public class AlgoButtonAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        stages = algo.Kosaraju(graph, list);
+        stages.clear();
+        stages.addAll(algo.Kosaraju(graph, list));
     }
 }

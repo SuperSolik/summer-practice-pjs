@@ -6,6 +6,10 @@ import graph.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.security.Key;
 import java.util.ArrayList;
 
 // Основное окно интерфейса
@@ -16,6 +20,7 @@ class MainWindow extends JFrame {
     private Graph graph;
     private GraphAlgo algo;
     private ArrayList<ArrayList<Color>> stages;
+    private int currentGraphState = 0, stateTimer;
 
     MainWindow(){
         this.graph = new Graph();
@@ -29,7 +34,7 @@ class MainWindow extends JFrame {
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel,BoxLayout.Y_AXIS));
         rightPanel.add(new JLabel("Скорость анимации"));
-        speedSlider = new JSlider(JSlider.VERTICAL,0,100,0);
+        speedSlider = new JSlider(JSlider.VERTICAL,0,100,10);
         speedSlider.setMinorTickSpacing(5);
         speedSlider.setMajorTickSpacing(50);
         speedSlider.setPaintTicks(true);
@@ -57,6 +62,7 @@ class MainWindow extends JFrame {
 
         // Algo Button
         JButton algoButton = new JButton("Algo");
+        stages = new ArrayList<>();
         algoButton.setAction(new AlgoButtonAction(graph, algo, stages, verticesList));
         algoButton.setText("Algo");
         rightPanel.add(algoButton);
@@ -74,10 +80,12 @@ class MainWindow extends JFrame {
         JMenu fileMenu = new JMenu("File");
 
         JMenuItem item = new JMenuItem("Import graph");
+        item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         item.addActionListener(new ImportGraphAction(this.graph));
         fileMenu.add(item);
 
         item = new JMenuItem("Export graph");
+        item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         item.addActionListener(new ExportGraphAction(this.graph));
         fileMenu.add(item);
 
@@ -99,6 +107,20 @@ class MainWindow extends JFrame {
     private void startUpdateCycle(){
         try {
             while (this.isEnabled()) {
+                if(stages!= null && !stages.isEmpty()) {
+                    if (stages.get(0).size() != graph.getVertices().size())
+                        panel.updateColors(null);
+                    else {
+                        panel.updateColors(stages.get(currentGraphState));
+                        stateTimer++;
+                        if (stateTimer >= speedSlider.getValue() + 1) {
+                            stateTimer = 0;
+                            if (currentGraphState < stages.size() - 1)
+                                currentGraphState++;
+                        }
+                    }
+                }
+                else panel.updateColors(null);
                 panel.repaint();
                 for(Vertex v : graph.getVertices()){
                     if(v.getX()<0)v.setX(1);
@@ -107,6 +129,7 @@ class MainWindow extends JFrame {
                     if(v.getY()>DrawPanel.FRAME_HEIGHT-DrawPanel.VERTEX_SIZE/2)v.setY(DrawPanel.FRAME_HEIGHT-DrawPanel.VERTEX_SIZE/2);
                 }
                 //calculate forces
+//                Thread.sleep(20);
                 Thread.sleep(20);
             }
         }catch (InterruptedException e){e.printStackTrace();}

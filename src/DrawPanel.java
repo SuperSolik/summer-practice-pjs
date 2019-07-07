@@ -8,13 +8,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
+import java.util.ArrayList;
 
 // Панелька, рисующая граф
 public class DrawPanel extends JPanel implements MouseMotionListener {
-    public static final int VERTEX_SIZE = 20, ARROW_SIZE = 10;
-    public static final int FRAME_WIDTH = 600, FRAME_HEIGHT = 600;
+    static final int VERTEX_SIZE = 20, ARROW_SIZE = 10;
+    static final int FRAME_WIDTH = 600, FRAME_HEIGHT = 600;
     private Paint[] p;
     private Graph graph;
+    private ArrayList<Color> verticesColors;
     private Vertex selectedVertex, editVertex;
     private PopUpPanel vertexMenu, canvasMenu;
     private int editVertexMarkerSize = 2*VERTEX_SIZE;
@@ -123,6 +125,9 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
             }
         });
     }
+    public void updateColors(ArrayList<Color> verticesColors){
+        this.verticesColors = verticesColors;
+    }
 
     @Override
     public void paint(Graphics g) {
@@ -157,8 +162,13 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
                 }
                 //TODO приделать стрелочки
             }
-            for (Vertex v : graph.getVertices()) {
-                g.setColor(Color.lightGray);
+//            for (Vertex v : graph.getVertices()) {
+            for(int i = 0; i < graph.getVertices().size() ; i++){
+                Vertex v  = graph.getVertices().get(i);
+                if(verticesColors==null)
+                    g.setColor(Color.lightGray);
+                else
+                    g.setColor(verticesColors.get(i));
                 g.fillOval((int) v.getX() - VERTEX_SIZE / 2, (int) v.getY() - VERTEX_SIZE / 2, VERTEX_SIZE, VERTEX_SIZE);
                 g.setColor(Color.BLACK);
                 g.drawOval((int) v.getX() - VERTEX_SIZE / 2, (int) v.getY() - VERTEX_SIZE / 2, VERTEX_SIZE, VERTEX_SIZE);
