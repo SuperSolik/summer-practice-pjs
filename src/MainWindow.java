@@ -1,5 +1,6 @@
 import actions.AlgoButtonAction;
 import actions.ExportGraphAction;
+import actions.FunctionalAction;
 import actions.ImportGraphAction;
 import graph.*;
 
@@ -7,25 +8,22 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.security.Key;
 import java.util.ArrayList;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 // Основное окно интерфейса
 class MainWindow extends JFrame {
     private DrawPanel panel;
     private JSlider speedSlider;
     private VerticesList verticesList;
-    private Graph graph;
-    private GraphAlgo algo;
-    private ArrayList<ArrayList<Color>> stages;
+    private Graph graph = new Graph();
+    private GraphAlgo algo = new GraphAlgo();
+    private ArrayList<ArrayList<Color>> stages = new ArrayList<>();
     private int currentGraphState = 0, stateTimer;
 
     MainWindow(){
-        this.graph = new Graph();
-        this.algo = new GraphAlgo();
-
         setSize(800,640); //поменять потом
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Kosaraju algorithm");
@@ -62,8 +60,11 @@ class MainWindow extends JFrame {
 
         // Algo Button
         JButton algoButton = new JButton("Algo");
-        stages = new ArrayList<>();
-        algoButton.setAction(new AlgoButtonAction(graph, algo, stages, verticesList));
+        algoButton.setAction(new FunctionalAction((ActionEvent e) -> {
+            stages.clear();
+            currentGraphState = 0;
+            stages.addAll(algo.Kosaraju(graph, verticesList));
+        }));
         algoButton.setText("Algo");
         rightPanel.add(algoButton);
 

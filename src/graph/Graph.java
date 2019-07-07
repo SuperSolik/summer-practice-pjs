@@ -2,7 +2,7 @@ package graph;
 
 import java.util.*;
 
-public class Graph{
+public class Graph {
     /*
      Нам не нужна куча конструкторов
      Никто его не будет копировать или делать из готовых коллекций
@@ -13,11 +13,6 @@ public class Graph{
     private List<Vertex> vertices;
     private List<Edge> edges;
 
-//    public enum TYPE {
-//        DIRECTED, UNDIRECTED
-//    }
-
-    //    private TYPE type = TYPE.DIRECTED;
     private boolean isDirected = true;
 
     public Graph() {
