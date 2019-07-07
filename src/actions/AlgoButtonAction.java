@@ -7,16 +7,17 @@ import graph.VerticesList;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.Vector;
 
 public class AlgoButtonAction extends AbstractAction {
     private Graph graph;
     private GraphAlgo algo;
     private VerticesList list;
-    private Vector<Vector<Color>> stages;
+    private ArrayList<ArrayList<Color>> stages;
 
     public AlgoButtonAction(Graph graph, GraphAlgo algo,
-                            Vector<Vector<Color>> stages,
+                            ArrayList<ArrayList<Color>> stages,
                             VerticesList list) {
         this.graph = graph;
         this.algo = algo;

@@ -34,4 +34,12 @@ public class VerticesList {
     void remove(Vertex vertex) {
         vertices.remove(vertex);
     }
+
+    void clear() {
+        for (int rowIndex = model.getRowCount()-1; rowIndex >= 0; --rowIndex) {
+            model.removeRow(rowIndex);
+        }
+
+        vertices.clear();
+    }
 }

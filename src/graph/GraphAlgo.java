@@ -4,12 +4,11 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Vector;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 
 public class GraphAlgo {
-    private Vector<Vector<Color>> states;
+    private ArrayList<ArrayList<Color>> states;
     private Graph graph;
 
     public GraphAlgo() { }
@@ -57,8 +56,13 @@ public class GraphAlgo {
         }
     }
 
-    public Vector<Vector<Color>> Kosaraju(Graph graph, VerticesList list){
-        states = new Vector<>();
+    public ArrayList<ArrayList<Color>> Kosaraju(Graph graph, VerticesList list){
+        states = new ArrayList<>();
+        list.clear();
+
+        for(Vertex v : graph.getVertices()){
+            v.setColor(Color.WHITE);
+        }
 
         graph.invert();
         DFS1_step(graph, list);
@@ -97,8 +101,8 @@ public class GraphAlgo {
         list.append(v);
     }
 
-    private Vector<Color> createState(){
-        Vector<Color> state = new Vector<>();
+    private ArrayList<Color> createState(){
+        ArrayList<Color> state = new ArrayList<>();
         graph.getVertices().forEach(el->state.add(el.getColor()));
         return state;
     }
