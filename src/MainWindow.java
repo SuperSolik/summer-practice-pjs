@@ -6,7 +6,7 @@ import graph.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.Vector;
+import java.util.ArrayList;
 
 // Основное окно интерфейса
 class MainWindow extends JFrame {
@@ -15,7 +15,7 @@ class MainWindow extends JFrame {
     private VerticesList verticesList;
     private Graph graph;
     private GraphAlgo algo;
-    private Vector<Vector<Color>> stages;
+    private ArrayList<ArrayList<Color>> stages;
 
     MainWindow(){
         this.graph = new Graph();

@@ -1,19 +1,20 @@
 package graph;
 
-import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.Vector;
+import java.util.function.Supplier;
 
 
 public class GraphAlgo {
-    private Vector<Vector<Color>> states;
+    private ArrayList<ArrayList<Color>> states;
     private Graph graph;
 
     public GraphAlgo() { }
 
-    private Vector<Vector<Color>> DFS1_step(Graph graph, VerticesList list) {
+    private void DFS1_step(Graph graph, VerticesList list) {
         //красит только из белого в черный
-        states = new Vector<>();
         this.graph = graph;
         states.add(createState());
 
@@ -21,30 +22,71 @@ public class GraphAlgo {
             if(v.getColor() == Color.WHITE)
                 visit(v, list);
         }
-        return states;
     }
 
 
-    private Vector<Vector<Color>> DFS2_step(Graph graph, VerticesList list) {
-        //TODO реализовать
-        //красит уже в различные цвета для каждой компоненты
-        return new Vector<>();
+    private void DFS2_step(Graph graph, VerticesList list) {
+        states.add(createState());
+        this.graph = graph;
+
+        ArrayList<Color> usedColors = new ArrayList<>();
+        Supplier<Color> randomColor = () -> {
+            Random rand = new Random();
+
+            do {
+                float r = rand.nextFloat();
+                float g = rand.nextFloat();
+                float b = rand.nextFloat();
+
+                Color color = new Color(r, g, b);
+                if (!usedColors.contains(color)) {
+                    usedColors.add(color);
+                    return color;
+                }
+            } while (true);
+        };
+
+        while (list.hasNext()) {
+            Color color = randomColor.get();
+
+            Vertex v = list.getNext();
+            if (v.getColor() == Color.WHITE) {
+                visit(v, color, list);
+            }
+        }
     }
 
-    public Vector<Vector<Color>> Kosaraju(Graph graph, VerticesList list){
+    public ArrayList<ArrayList<Color>> Kosaraju(Graph graph, VerticesList list){
+        states = new ArrayList<>();
+        list.clear();
+
+        for(Vertex v : graph.getVertices()){
+            v.setColor(Color.WHITE);
+        }
+
         graph.invert();
-        var states1 = DFS1_step(graph, list);
+        DFS1_step(graph, list);
         graph.invert();
 
         for(Vertex v : graph.getVertices()){
             v.setColor(Color.WHITE);
         }
-        var states2 = DFS2_step(graph, list);
+        DFS2_step(graph, list);
 
-        Vector<Vector<Color>> all_states = new Vector<>();
-        all_states.addAll(states1);
-        all_states.addAll(states2);
-        return all_states;
+        return states;
+    }
+
+
+    private void visit(Vertex v, Color color, VerticesList list) {
+        v.setColor(color);
+        list.remove(v);
+
+        states.add(createState());
+        for (Edge e : v.getEdges()) {
+            if(e.getDest().getColor() == Color.WHITE) {
+                visit(e.getDest(), color, list);
+            }
+        }
     }
 
     private void visit(Vertex v, VerticesList list) {
@@ -55,11 +97,12 @@ public class GraphAlgo {
                 visit(e.getDest(), list);
             }
         }
+
         list.append(v);
     }
 
-    private Vector<Color> createState(){
-        Vector<Color> state = new Vector<>();
+    private ArrayList<Color> createState(){
+        ArrayList<Color> state = new ArrayList<>();
         graph.getVertices().forEach(el->state.add(el.getColor()));
         return state;
     }

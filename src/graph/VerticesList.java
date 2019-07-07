@@ -13,20 +13,33 @@ public class VerticesList {
     }
 
     void append(Vertex vertex) {
-        this.model.addRow(new Object[]{vertex.getName()});
-        this.vertices.add(vertex);
+        model.addRow(new Object[]{vertex.getName()});
+
+        vertices.add(vertex);
     }
 
-    String getNext() {
-        int lastElIndex = this.vertices.size() - 1;
+    Vertex getNext() {
+        int lastElIndex = vertices.size() - 1;
 
-        Vertex next = this.vertices.get(lastElIndex);
-        this.vertices.remove(lastElIndex);
+        Vertex next = vertices.get(lastElIndex);
+        vertices.remove(lastElIndex);
 
-        return next.getName();
+        return next;
+    }
+
+    boolean hasNext() {
+        return !vertices.isEmpty();
     }
 
     void remove(Vertex vertex) {
-        this.vertices.remove(vertex);
+        vertices.remove(vertex);
+    }
+
+    void clear() {
+        for (int rowIndex = model.getRowCount()-1; rowIndex >= 0; --rowIndex) {
+            model.removeRow(rowIndex);
+        }
+
+        vertices.clear();
     }
 }
