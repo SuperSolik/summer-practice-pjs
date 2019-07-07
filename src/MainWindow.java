@@ -58,6 +58,7 @@ class MainWindow extends JFrame {
         // Algo Button
         JButton algoButton = new JButton("Algo");
         algoButton.setAction(new AlgoButtonAction(graph, algo, stages, verticesList));
+        algoButton.setText("Algo");
         rightPanel.add(algoButton);
 
         // Main Panel
