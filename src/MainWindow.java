@@ -1,26 +1,22 @@
-import graph.Edge;
-import graph.Graph;
-import graph.GraphAlgo;
-import graph.Vertex;
+import actions.AlgoButtonAction;
+import actions.ExportGraphAction;
+import actions.ImportGraphAction;
+import graph.*;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Scanner;
+import java.util.Vector;
 
 // Основное окно интерфейса
 class MainWindow extends JFrame {
     private DrawPanel panel;
     private JSlider speedSlider;
-    private JTable verticesList;
+    private VerticesList verticesList;
     private Graph graph;
     private GraphAlgo algo;
+    private Vector<Vector<Color>> stages;
+
     MainWindow(){
         this.graph = new Graph();
         this.algo = new GraphAlgo();
@@ -45,21 +41,26 @@ class MainWindow extends JFrame {
             rightPanel.add(new JPanel());
         }
 //        rightPanel.add(speedSlider);
+
+        // graph.VerticesList
         DefaultTableModel model = new DefaultTableModel();
-        verticesList = new JTable(model);
-//        var a = new TableColumn();
-//        a.setHeaderValue("Vertex name");
-//        verticesList.addColumn(a);
+        JTable table = new JTable(model);
         model.addColumn("Name");
-        for(int i = 0 ; i < 100 ; i++)model.addRow(new Object[]{""+i});
+
+        verticesList = new VerticesList(model);
+
         {
-            var jsp = new JScrollPane(verticesList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            var jsp = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
             jsp.setPreferredSize(new Dimension(300,300));
             rightPanel.add(jsp);
         }
+
+        // Algo Button
         JButton algoButton = new JButton("Algo");
-//        algoButton.setAction(); // TODO set action on button
+        algoButton.setAction(new AlgoButtonAction(graph, algo, stages, verticesList));
         rightPanel.add(algoButton);
+
+        // Main Panel
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.X_AXIS));
         mainPanel.add(panel);
@@ -108,88 +109,5 @@ class MainWindow extends JFrame {
                 Thread.sleep(20);
             }
         }catch (InterruptedException e){e.printStackTrace();}
-    }
-
-    class ImportGraphAction extends AbstractAction {
-        Graph graph;
-
-        ImportGraphAction(Graph graph) {
-            this.graph = graph;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent actionEvent) {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setFileFilter(new FileNameExtensionFilter("Graph file", "ogf"));
-            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                File selectedFile = fileChooser.getSelectedFile();
-
-                try (Scanner fileScanner = new Scanner(selectedFile)) {
-                    this.graph.clear();
-                    while (fileScanner.hasNextLine()) {
-                        String rowLine = fileScanner.nextLine();
-                        if (rowLine.isEmpty()) {
-                            return;
-                        }
-
-                        String[] splitLine = rowLine.split(" ");
-
-                        String originVertexName = splitLine[0];
-                        int originVertexX = Integer.valueOf(splitLine[1]);
-                        int originVertexY = Integer.valueOf(splitLine[2]);
-
-                        boolean vertexCreated = this.graph.createVertex(
-                                originVertexName,
-                                originVertexX,
-                                originVertexY
-                        );
-
-                        if (!vertexCreated) { // vertex was created in previous iterations
-                            Vertex originVertex = this.graph.getVertex(originVertexName);
-                            originVertex.setX(originVertexX);
-                            originVertex.setY(originVertexY);
-                        }
-
-                        for (int i = 3; i != splitLine.length; ++i) {
-                            String destVertexName = splitLine[i];
-                            this.graph.createVertex(destVertexName);
-                            this.graph.createEdge(originVertexName, destVertexName);
-                        }
-                    }
-                } catch (FileNotFoundException err) {/* never reaches, because file selected by user */}
-            }
-        }
-    }
-
-    class ExportGraphAction extends AbstractAction {
-        Graph graph;
-
-        ExportGraphAction(Graph graph) {
-            this.graph = graph;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent actionEvent) {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setFileFilter(new FileNameExtensionFilter("Graph file", "ogf"));
-            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                File selectedFile = fileChooser.getSelectedFile();
-
-                try (FileWriter fileWriter = new FileWriter(selectedFile);) {
-                    for (Vertex origin : this.graph.getVertices()) {
-                        StringBuilder lineBuilder = new StringBuilder();
-                        lineBuilder.append(origin.getName())
-                                .append(" " + (int)origin.getX())
-                                .append(" " + (int)origin.getY());
-
-                        for (Edge edge : origin.getEdges()) {
-                            lineBuilder.append(' ' + edge.getDest().getName());
-                        }
-
-                        fileWriter.write(lineBuilder.toString() + '\n');
-                    }
-                } catch (IOException err) {/* never reaches, because file selected by user */}
-            }
-        }
     }
 }
