@@ -11,6 +11,11 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class ImportGraphAction extends AbstractAction {
+    /*
+    TODO
+    Сделать проверку на корректный файл
+    Возможно добавить поддержку json
+     */
     private Graph graph;
 
     public ImportGraphAction(Graph graph) {

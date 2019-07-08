@@ -128,7 +128,7 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
         });
     }
 
-    public void updateColors(ArrayList<Color> verticesColors) {
+    void updateColors(ArrayList<Color> verticesColors) {
         this.verticesColors = verticesColors;
     }
 

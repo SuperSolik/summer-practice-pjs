@@ -12,6 +12,11 @@ import java.util.ArrayList;
 
 // Основное окно интерфейса
 class MainWindow extends JFrame {
+    /*
+    TODO
+    Добавить кнопки для работы с алгоритмом
+    В начало, шаг назад, шаг вперед, автостеп, сразу в конец
+     */
     private DrawPanel panel;
     private JSlider speedSlider;
     private VerticesList verticesList;

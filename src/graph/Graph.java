@@ -4,11 +4,8 @@ import java.util.*;
 
 public class Graph {
     /*
-     Нам не нужна куча конструкторов
-     Никто его не будет копировать или делать из готовых коллекций
-     Мы либо создаем пустой граф при запуске
-     Либо считываем его из файла
-     Которые нам не понадобятся я пометил как Deprecated
+    TODO
+    Реализовать паттерн Observer и бросать евент graphModified
      */
     private List<Vertex> vertices;
     private List<Edge> edges;
