@@ -11,7 +11,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 // Основное окно интерфейса
-class MainWindow extends JFrame {
+class MainWindow extends JFrame implements Listener {
     /*
     TODO
     Добавить кнопки для работы с алгоритмом
@@ -24,9 +24,11 @@ class MainWindow extends JFrame {
     private GraphAlgo algo = new GraphAlgo();
     private ArrayList<ArrayList<Color>> stages = new ArrayList<>();
     private int currentGraphState = 0, stateTimer;
-//    private boolean autoStep = false;
+    private boolean autoStep = false;
 
     MainWindow(){
+        graph.onModify(this);
+
         setSize(800,640); //поменять потом
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Kosaraju algorithm");
@@ -135,5 +137,12 @@ class MainWindow extends JFrame {
                 Thread.sleep(20);
             }
         }catch (InterruptedException e){e.printStackTrace();}
+    }
+
+    @Override
+    public void performAction() {
+        stages.clear();
+        currentGraphState = 0;
+        autoStep = false;
     }
 }

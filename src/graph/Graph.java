@@ -9,6 +9,7 @@ public class Graph {
      */
     private List<Vertex> vertices;
     private List<Edge> edges;
+    private Listener listener;
 
     private boolean isDirected = true;
 
@@ -19,6 +20,10 @@ public class Graph {
     public Graph(boolean isDirected) {
         this();
         this.isDirected = isDirected;
+    }
+
+    public void onModify(Listener listener) {
+        this.listener = listener;
     }
 
     @Deprecated
@@ -62,16 +67,20 @@ public class Graph {
         if(getVertex(name) == null){
             Vertex v = new Vertex(name, x, y);
             vertices.add(v);
+
+            listener.performAction();
             return true;
         }
         return false;
     }
 
     public boolean createVertex(String name) {
+        listener.performAction();
         return createVertex(name, 0, 0);
     }
 
     public boolean createEdge(String src, String dest){
+        listener.performAction();
         Vertex from = getVertex(src);
         Vertex to = getVertex(dest);
         if(from.isConnected(to)) return false;
@@ -82,6 +91,8 @@ public class Graph {
     }
 
     public boolean createEdge(Vertex src, Vertex dest){
+        listener.performAction();
+
         if(src.isConnected(dest)) return false;
         Edge e = new Edge(src, dest);
         src.addEdge(e);
@@ -89,6 +100,8 @@ public class Graph {
         return true;
     }
     public boolean removeEdge(Vertex src, Vertex dest){
+        listener.performAction();
+
         if(!src.isConnected(dest))return false;
         Edge delEdge = src.getEdge(dest);
         src.getEdges().remove(delEdge);
@@ -96,6 +109,8 @@ public class Graph {
         return true;
     }
     public boolean removeVertex(Vertex v){
+        listener.performAction();
+
         if(!vertices.contains(v)) return false;
         vertices.remove(v);
         edges.removeIf(e -> e.getDest() ==v || e.getSource() == v);

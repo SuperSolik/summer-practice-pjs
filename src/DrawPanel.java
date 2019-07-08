@@ -134,7 +134,7 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
 
     @Override
     public void paint(Graphics g) {
-        //метод отрисовки
+        // метод отрисовки
         if (graph.getVertices().size() == 0) {
             for (int i = 0; i < p.length; i++) {
                 ((Graphics2D) g).setPaint(p[i]);
