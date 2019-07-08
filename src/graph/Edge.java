@@ -22,8 +22,10 @@ public class Edge{
         return dest;
     }
 
-    public void invert(){
-        //TODO учти что edge хранится еще и в вершине
+    public void invert() {
+        source.getEdges().remove(this);
+        dest.getEdges().add(this);
+
         Vertex temp = dest;
         dest = source;
         source = temp;

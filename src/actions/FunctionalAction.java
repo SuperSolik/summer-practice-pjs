@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 import java.util.function.Consumer;
 
 public class FunctionalAction extends AbstractAction {
-    Consumer<ActionEvent> lambda;
+    private Consumer<ActionEvent> lambda;
 
     public FunctionalAction(Consumer<ActionEvent> customaction) {
         this.lambda = customaction;
