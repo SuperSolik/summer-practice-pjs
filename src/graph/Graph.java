@@ -63,7 +63,6 @@ public class Graph {
         if(getVertex(name) == null){
             Vertex v = new Vertex(name, x, y);
             vertices.add(v);
-
             listener.performAction();
             return true;
         }
@@ -71,45 +70,41 @@ public class Graph {
     }
 
     public boolean createVertex(String name) {
-        listener.performAction();
         return createVertex(name, 0, 0);
     }
 
     public boolean createEdge(String src, String dest){
-        listener.performAction();
         Vertex from = getVertex(src);
         Vertex to = getVertex(dest);
         if(from.isConnected(to)) return false;
         Edge e = new Edge(from, to);
         from.addEdge(e);
         edges.add(e);
+        listener.performAction();
         return true;
     }
 
     public boolean createEdge(Vertex src, Vertex dest){
-        listener.performAction();
-
         if(src.isConnected(dest)) return false;
         Edge e = new Edge(src, dest);
         src.addEdge(e);
         edges.add(e);
+        listener.performAction();
         return true;
     }
     public boolean removeEdge(Vertex src, Vertex dest){
-        listener.performAction();
-
         if(!src.isConnected(dest))return false;
         Edge delEdge = src.getEdge(dest);
         src.getEdges().remove(delEdge);
         edges.remove(delEdge);
+        listener.performAction();
         return true;
     }
     public boolean removeVertex(Vertex v){
-        listener.performAction();
-
         if(!vertices.contains(v)) return false;
         vertices.remove(v);
         edges.removeIf(e -> e.getDest() ==v || e.getSource() == v);
+        listener.performAction();
         return true;
     }
 

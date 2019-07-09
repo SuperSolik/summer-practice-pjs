@@ -11,18 +11,18 @@ public class Vertex {
     private List<Edge> edges = new ArrayList<>();
     private Color color;
 
-    public Vertex(String name) {
+    Vertex(String name) {
         this.name = name;
     }
 
-    public Vertex(String name, float x, float y) {
+    Vertex(String name, float x, float y) {
         this.name = name;
         this.x = x;
         this.y = y;
         this.color = Color.WHITE;
     }
     @Deprecated
-    public Vertex(Vertex vertex) {
+    Vertex(Vertex vertex) {
         this(vertex.name, vertex.x, vertex.y);
         this.edges.addAll(vertex.edges);
     }

@@ -91,7 +91,7 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
                             case 0:
                                 String result = getUniqueVerticeName(null);
                                 if (result != null && result.length() > 0)
-                                    graph.getVertices().add(new Vertex(result, e.getX(), e.getY()));
+                                    graph.createVertex(result, e.getX(), e.getY());
                                 break;
                             case 1:
                                 graph.clear();
@@ -167,7 +167,7 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
             }
             for (int i = 0; i < graph.getVertices().size(); i++) {
                 Vertex v = graph.getVertices().get(i);
-                if (verticesColors == null)
+                if (verticesColors == null || i >= verticesColors.size())
                     g.setColor(Color.lightGray);
                 else
                     g.setColor(verticesColors.get(i));
@@ -177,7 +177,10 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
                 else
                     g.setColor(Color.BLACK);
                 g.drawOval((int) v.getX() - VERTEX_SIZE / 2, (int) v.getY() - VERTEX_SIZE / 2, VERTEX_SIZE, VERTEX_SIZE);
-                g.drawString(v.getName(), (int) v.getX() - 10 * v.getName().length() / 2, (int) v.getY() + 5);
+                if(v.getName().length()>1)
+                    g.drawString(v.getName(), (int) v.getX(), (int) v.getY()- VERTEX_SIZE/2 - 1);
+                else
+                    g.drawString(v.getName(), (int) v.getX() - 10 * v.getName().length() / 2, (int) v.getY() + 5);
                 if (v == editVertex) {
                     g.drawOval((int) v.getX() - editVertexMarkerSize / 4
                             , (int) v.getY() - editVertexMarkerSize / 4

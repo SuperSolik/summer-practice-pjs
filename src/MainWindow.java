@@ -20,24 +20,26 @@ class MainWindow extends JFrame implements Listener {
     private DrawPanel panel;
     private JSlider speedSlider;
     private VerticesList verticesList;
-    private Graph graph = new Graph();
+    private JButton autoStepButton;
+    private Graph graph;
     private GraphAlgo algo = new GraphAlgo();
     private ArrayList<ArrayList<Color>> stages = new ArrayList<>();
     private int currentGraphState = 0, stateTimer;
     private boolean autoStep = false;
 
-    MainWindow(){
+    MainWindow() {
+        graph = new Graph();
         graph.onModify(this);
 
-        setSize(950,655); //поменять потом
+        setSize(950, 655); //поменять потом
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Kosaraju algorithm");
         panel = new DrawPanel(graph);
-        panel.setMinimumSize(new Dimension(600,600));
+        panel.setMinimumSize(new Dimension(600, 600));
         JPanel rightPanel = new JPanel();
-        rightPanel.setLayout(new BoxLayout(rightPanel,BoxLayout.Y_AXIS));
+        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         rightPanel.add(new JLabel("Скорость анимации"));
-        speedSlider = new JSlider(JSlider.VERTICAL,0,100,10);
+        speedSlider = new JSlider(JSlider.VERTICAL, 0, 100, 10);
         speedSlider.setMinorTickSpacing(5);
         speedSlider.setMajorTickSpacing(50);
         speedSlider.setPaintTicks(true);
@@ -59,53 +61,44 @@ class MainWindow extends JFrame implements Listener {
 
         {
             var jsp = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-            jsp.setPreferredSize(new Dimension(300,300));
+            jsp.setPreferredSize(new Dimension(300, 300));
             rightPanel.add(jsp);
         }
 
-        // Algo Button
-//        JButton algoButton = new JButton("Algo");
-//        algoButton.setAction(new FunctionalAction((ActionEvent e) -> {
-//            stages.clear();
-//            currentGraphState = 0;
-//            stages.addAll(algo.Kosaraju(graph, verticesList));
-//        }));
-//        algoButton.setText("Algo");
-//        rightPanel.add(algoButton);
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new BoxLayout(buttonPanel,BoxLayout.LINE_AXIS));
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
         JButton toStartButton = new JButton(new FunctionalAction(e -> {
             currentGraphState = 0;
-            if(stages.isEmpty())
-                stages.addAll(algo.Kosaraju(graph,verticesList));
+            if (stages.isEmpty())
+                stages.addAll(algo.Kosaraju(graph, verticesList));
         }));
-        JButton autoStepButton = new JButton(new FunctionalAction((ActionEvent e) -> {
-            if(autoStep){
+        autoStepButton = new JButton(new FunctionalAction((ActionEvent e) -> {
+            if (stages.isEmpty())
+                stages.addAll(algo.Kosaraju(graph, verticesList));
+            if (autoStep) {
                 autoStep = false;
-                ((JButton)e.getSource()).setText("Start Animation");
-            }
-            else{
+                ((JButton) e.getSource()).setText("Start Animation");
+            } else {
                 autoStep = true;
-                ((JButton)e.getSource()).setText("Stop Animation");
+                ((JButton) e.getSource()).setText("Stop Animation");
             }
         }));
         JButton stepBackButton = new JButton(new FunctionalAction(e -> {
-            if(currentGraphState>0)currentGraphState--;
+            if (currentGraphState > 0) currentGraphState--;
             autoStep = false;
             autoStepButton.setText("Start Animation");
         }));
         JButton stepForwardButton = new JButton(new FunctionalAction(e -> {
-            if(stages.isEmpty())
-                stages.addAll(algo.Kosaraju(graph,verticesList));
+            if (stages.isEmpty())
+                stages.addAll(algo.Kosaraju(graph, verticesList));
             autoStep = false;
             autoStepButton.setText("Start Animation");
-            if(currentGraphState < stages.size() - 1) currentGraphState ++;
+            if (currentGraphState < stages.size() - 1) currentGraphState++;
         }));
         JButton toEndButton = new JButton(new FunctionalAction(e -> {
-            if(stages.isEmpty())
-                stages.addAll(algo.Kosaraju(graph,verticesList));
-            currentGraphState = stages.size()-1;
-            System.out.println(this.getSize());
+            if (stages.isEmpty())
+                stages.addAll(algo.Kosaraju(graph, verticesList));
+            currentGraphState = stages.size() - 1;
         }));
 
         toStartButton.setText("<<");
@@ -121,7 +114,7 @@ class MainWindow extends JFrame implements Listener {
         rightPanel.add(buttonPanel);
         // Main Panel
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.X_AXIS));
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
         mainPanel.add(panel);
         mainPanel.add(rightPanel);
         add(mainPanel);
@@ -156,10 +149,11 @@ class MainWindow extends JFrame implements Listener {
         setVisible(true);
         new Thread(this::startUpdateCycle).start();
     }
-    private void startUpdateCycle(){
+
+    private void startUpdateCycle() {
         try {
             while (this.isEnabled()) {
-                if(stages!= null && !stages.isEmpty()) {
+                if (stages != null && !stages.isEmpty()) {
                     if (stages.get(0).size() != graph.getVertices().size())
                         panel.updateColors(null);
                     else {
@@ -173,18 +167,21 @@ class MainWindow extends JFrame implements Listener {
                             }
                         }
                     }
-                }
-                else panel.updateColors(null);
+                } else panel.updateColors(null);
                 panel.repaint();
-                for(Vertex v : graph.getVertices()){
-                    if(v.getX()<0)v.setX(1);
-                    if(v.getX()>DrawPanel.FRAME_WIDTH-DrawPanel.VERTEX_SIZE/2)v.setX(DrawPanel.FRAME_WIDTH-DrawPanel.VERTEX_SIZE/2);
-                    if(v.getY()<0)v.setY(1);
-                    if(v.getY()>DrawPanel.FRAME_HEIGHT-DrawPanel.VERTEX_SIZE/2)v.setY(DrawPanel.FRAME_HEIGHT-DrawPanel.VERTEX_SIZE/2);
+                for (Vertex v : graph.getVertices()) {
+                    if (v.getX() < 0) v.setX(1);
+                    if (v.getX() > DrawPanel.FRAME_WIDTH - DrawPanel.VERTEX_SIZE / 2)
+                        v.setX(DrawPanel.FRAME_WIDTH - DrawPanel.VERTEX_SIZE / 2);
+                    if (v.getY() < 0) v.setY(1);
+                    if (v.getY() > DrawPanel.FRAME_HEIGHT - DrawPanel.VERTEX_SIZE / 2)
+                        v.setY(DrawPanel.FRAME_HEIGHT - DrawPanel.VERTEX_SIZE / 2);
                 }
                 Thread.sleep(20);
             }
-        }catch (InterruptedException e){e.printStackTrace();}
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -192,5 +189,6 @@ class MainWindow extends JFrame implements Listener {
         stages.clear();
         currentGraphState = 0;
         autoStep = false;
+        autoStepButton.setText("Start Animation");
     }
 }

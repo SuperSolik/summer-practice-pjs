@@ -3,7 +3,7 @@ package graph;
 public class Edge{
     private Vertex source,dest;
 
-    public Edge(Vertex source, Vertex dest) {
+    Edge(Vertex source, Vertex dest) {
         if (source == null || dest == null)
             throw (new NullPointerException("Both 'dest' and 'source' vertices need dest be non-NULL."));
         this.source = source;
