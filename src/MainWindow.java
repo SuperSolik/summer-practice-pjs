@@ -8,6 +8,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 // Основное окно интерфейса
@@ -135,16 +137,16 @@ class MainWindow extends JFrame implements Listener {
         fileMenu.add(item);
 
         // settings menu
-        JMenu settingsMenu = new JMenu("Settings");
+//        JMenu settingsMenu = new JMenu("Settings");
         JMenu helpMenu = new JMenu("About");
-        item = new JMenuItem("Help");
-//        item.setAction();
+        item = new JMenuItem(new FunctionalAction(e-> openHtmlViewer(new File("./doc/help.htm"))));
+        item.setText("Help");
         helpMenu.add(item);
-        item = new JMenuItem("Authors");
-//        item.setAction();
+        item = new JMenuItem(new FunctionalAction(e-> openHtmlViewer(new File("./doc/author.htm"))));
+        item.setText("Authors");
         helpMenu.add(item);
         menuBar.add(fileMenu);
-        menuBar.add(settingsMenu);
+//        menuBar.add(settingsMenu);
         menuBar.add(helpMenu);
         setVisible(true);
         new Thread(this::startUpdateCycle).start();
@@ -190,5 +192,17 @@ class MainWindow extends JFrame implements Listener {
         currentGraphState = 0;
         autoStep = false;
         autoStepButton.setText("Start Animation");
+    }
+    private  void openHtmlViewer(File htmlFile) {
+        if(Desktop.isDesktopSupported()){
+            try {
+                Desktop.getDesktop().browse(htmlFile.toURI());
+            } catch (IOException e1) {
+                JOptionPane.showMessageDialog(null,"Unable to read file");
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(null,"Not supported on this system");
+        }
     }
 }
