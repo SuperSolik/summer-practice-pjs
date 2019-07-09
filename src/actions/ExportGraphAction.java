@@ -4,6 +4,8 @@ import graph.Edge;
 import graph.Graph;
 import graph.Vertex;
 
+import javax.json.Json;
+import javax.json.stream.JsonGenerator;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
@@ -21,23 +23,30 @@ public class ExportGraphAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileFilter(new FileNameExtensionFilter("Graph file", "ogf"));
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Graph json", "json"));
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
 
-            try (FileWriter fileWriter = new FileWriter(selectedFile);) {
-                for (Vertex origin : this.graph.getVertices()) {
-                    StringBuilder lineBuilder = new StringBuilder();
-                    lineBuilder.append(origin.getName())
-                            .append(" " + (int)origin.getX())
-                            .append(" " + (int)origin.getY());
+            try (FileWriter fileWriter = new FileWriter(selectedFile)) {
+                JsonGenerator jsonGenerator = Json.createGenerator(fileWriter);
 
-                    for (Edge edge : origin.getEdges()) {
-                        lineBuilder.append(' ' + edge.getDest().getName());
-                    }
+                jsonGenerator.writeStartArray();
+                for (Vertex source : this.graph.getVertices()) {
+                    jsonGenerator.writeStartObject()
+                        .write("name", source.getName())
+                        .write("x", source.getX())
+                        .write("y", source.getY());
 
-                    fileWriter.write(lineBuilder.toString() + '\n');
+                        jsonGenerator.writeStartArray("dests");
+                        for (Edge edge : source .getEdges()) {
+                            jsonGenerator.write(edge.getDest().getName());
+                        }
+                        jsonGenerator.writeEnd();
+                    jsonGenerator.writeEnd();
                 }
+                jsonGenerator.writeEnd();
+
+                jsonGenerator.close();
             } catch (IOException err) {/* never reaches, because file selected by user */}
         }
     }
