@@ -3,10 +3,6 @@ package graph;
 import java.util.*;
 
 public class Graph {
-    /*
-    TODO
-    Реализовать паттерн Observer и бросать евент graphModified
-     */
     private List<Vertex> vertices;
     private List<Edge> edges;
     private Listener listener;

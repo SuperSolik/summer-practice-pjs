@@ -4,23 +4,16 @@ import graph.Graph;
 import graph.Vertex;
 
 import javax.json.*;
-import javax.json.stream.JsonGenerator;
 import javax.json.stream.JsonParsingException;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Scanner;
 
 public class ImportGraphAction extends AbstractAction {
-    /*
-    TODO
-    Сделать проверку на корректный файл
-    Возможно добавить поддержку json
-     */
+
     private Graph graph;
 
     public ImportGraphAction(Graph graph) {

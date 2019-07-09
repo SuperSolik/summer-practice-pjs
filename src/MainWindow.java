@@ -29,7 +29,7 @@ class MainWindow extends JFrame implements Listener {
     MainWindow(){
         graph.onModify(this);
 
-        setSize(800,640); //поменять потом
+        setSize(950,655); //поменять потом
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Kosaraju algorithm");
         panel = new DrawPanel(graph);
@@ -64,15 +64,61 @@ class MainWindow extends JFrame implements Listener {
         }
 
         // Algo Button
-        JButton algoButton = new JButton("Algo");
-        algoButton.setAction(new FunctionalAction((ActionEvent e) -> {
-            stages.clear();
+//        JButton algoButton = new JButton("Algo");
+//        algoButton.setAction(new FunctionalAction((ActionEvent e) -> {
+//            stages.clear();
+//            currentGraphState = 0;
+//            stages.addAll(algo.Kosaraju(graph, verticesList));
+//        }));
+//        algoButton.setText("Algo");
+//        rightPanel.add(algoButton);
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel,BoxLayout.LINE_AXIS));
+        JButton toStartButton = new JButton(new FunctionalAction(e -> {
             currentGraphState = 0;
-            stages.addAll(algo.Kosaraju(graph, verticesList));
+            if(stages.isEmpty())
+                stages.addAll(algo.Kosaraju(graph,verticesList));
         }));
-        algoButton.setText("Algo");
-        rightPanel.add(algoButton);
+        JButton autoStepButton = new JButton(new FunctionalAction((ActionEvent e) -> {
+            if(autoStep){
+                autoStep = false;
+                ((JButton)e.getSource()).setText("Start Animation");
+            }
+            else{
+                autoStep = true;
+                ((JButton)e.getSource()).setText("Stop Animation");
+            }
+        }));
+        JButton stepBackButton = new JButton(new FunctionalAction(e -> {
+            if(currentGraphState>0)currentGraphState--;
+            autoStep = false;
+            autoStepButton.setText("Start Animation");
+        }));
+        JButton stepForwardButton = new JButton(new FunctionalAction(e -> {
+            if(stages.isEmpty())
+                stages.addAll(algo.Kosaraju(graph,verticesList));
+            autoStep = false;
+            autoStepButton.setText("Start Animation");
+            if(currentGraphState < stages.size() - 1) currentGraphState ++;
+        }));
+        JButton toEndButton = new JButton(new FunctionalAction(e -> {
+            if(stages.isEmpty())
+                stages.addAll(algo.Kosaraju(graph,verticesList));
+            currentGraphState = stages.size()-1;
+            System.out.println(this.getSize());
+        }));
 
+        toStartButton.setText("<<");
+        stepBackButton.setText("<");
+        stepForwardButton.setText(">");
+        toEndButton.setText(">>");
+        autoStepButton.setText("Start Animation");
+        buttonPanel.add(toStartButton);
+        buttonPanel.add(stepBackButton);
+        buttonPanel.add(stepForwardButton);
+        buttonPanel.add(toEndButton);
+        buttonPanel.add(autoStepButton);
+        rightPanel.add(buttonPanel);
         // Main Panel
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.X_AXIS));
@@ -118,11 +164,13 @@ class MainWindow extends JFrame implements Listener {
                         panel.updateColors(null);
                     else {
                         panel.updateColors(stages.get(currentGraphState));
-                        stateTimer++;
-                        if (stateTimer >= 101 - speedSlider.getValue()) {
-                            stateTimer = 0;
-                            if (currentGraphState < stages.size() - 1)
-                                currentGraphState++;
+                        if (autoStep) {
+                            stateTimer++;
+                            if (stateTimer >= 101 - speedSlider.getValue()) {
+                                stateTimer = 0;
+                                if (currentGraphState < stages.size() - 1)
+                                    currentGraphState++;
+                            }
                         }
                     }
                 }
