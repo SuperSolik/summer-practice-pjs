@@ -52,22 +52,24 @@ public class ImportGraphAction extends AbstractAction {
                         }
                     } catch (NullPointerException err) {
                         // delete already created nodes
-                        this.graph.clear();
+                        graph.clear();
 
-                        System.out.println("неправильное имя у полей в json");
-                        // TODO неправильное имя у полей в json
+                        JOptionPane.showMessageDialog(null,
+                                "Invalid input file:\nInvalid field name found", "Open file error", JOptionPane.ERROR_MESSAGE);
+                        break;
                     } catch (ClassCastException err) {
+                        System.out.println("¿Quieres?");
                         throw err;
                     }
                 }
             } catch (JsonParsingException | ClassCastException err) {
-                // delete already created nodes
+                // delete created nodes
                 this.graph.clear();
-
-                System.out.println("неправильный формат (к примеру ожидается массив [], а пришел объект {})");
-                // TODO неправильный формат (к примеру ожидается массив [], а пришел объект {})
+                JOptionPane.showMessageDialog(null,
+                        "Invalid input file:\n Syntax error while parsing JSON file","Open file error",JOptionPane.ERROR_MESSAGE);
             } catch (IOException err) {
-                /* never reaches, because file selected by user */
+                JOptionPane.showMessageDialog(null,
+                        "Unable to open file","Open file error",JOptionPane.ERROR_MESSAGE);
             }
         }
     }

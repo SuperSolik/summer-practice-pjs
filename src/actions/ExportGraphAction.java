@@ -24,9 +24,12 @@ public class ExportGraphAction extends AbstractAction {
     public void actionPerformed(ActionEvent actionEvent) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(new FileNameExtensionFilter("Graph json", "json"));
-        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
-
+            if(!selectedFile.getName().endsWith(".json")){
+                selectedFile = new File(selectedFile.getPath() + ".json");
+            }
             try (FileWriter fileWriter = new FileWriter(selectedFile)) {
                 JsonGenerator jsonGenerator = Json.createGenerator(fileWriter);
 
