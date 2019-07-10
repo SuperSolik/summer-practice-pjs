@@ -71,6 +71,10 @@ class MainWindow extends JFrame implements Listener {
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
         JButton toStartButton = new JButton(new FunctionalAction(e -> {
             currentGraphState = 0;
+            if(autoStep){
+                autoStepButton.setText("Start Animation");
+                autoStep = false;
+            }
             if (stages.isEmpty())
                 stages.addAll(algo.Kosaraju(graph, verticesList));
         }));
@@ -83,6 +87,7 @@ class MainWindow extends JFrame implements Listener {
             } else {
                 autoStep = true;
                 ((JButton) e.getSource()).setText("Stop Animation");
+                if(currentGraphState==stages.size()-1)currentGraphState=0;
             }
         }));
         JButton stepBackButton = new JButton(new FunctionalAction(e -> {
