@@ -167,6 +167,10 @@ class MainWindow extends JFrame implements Listener {
                                 if (currentGraphState < stages.size() - 1)
                                     currentGraphState++;
                             }
+                            if(currentGraphState == stages.size()-1){
+                                autoStep = false;
+                                autoStepButton.setText("Start Animation");
+                            }
                         }
                     }
                 } else panel.updateColors(null);

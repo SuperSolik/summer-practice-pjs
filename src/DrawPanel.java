@@ -29,10 +29,10 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
         p[1] = new GradientPaint(150, 300, Color.YELLOW, 300, 300, Color.GREEN);
         p[2] = new GradientPaint(300, 300, Color.GREEN, 450, 300, Color.BLUE);
         p[3] = new GradientPaint(450, 300, Color.BLUE, 600, 300, Color.MAGENTA);
-        backgroundPaint = new GradientPaint(0,0,Color.WHITE,FRAME_WIDTH,FRAME_HEIGHT,new Color(180,180,180));
+        backgroundPaint = new GradientPaint(0, 0, Color.WHITE, FRAME_WIDTH, FRAME_HEIGHT, new Color(180, 180, 180));
         arrowXs = new int[3];
         arrowYs = new int[3];
-        setPreferredSize(new Dimension(600, 600));
+        setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 
         vertexMenu = new PopUpPanel(new String[]{"Add/remove edge", "Remove node", "Rename node"});
         canvasMenu = new PopUpPanel(new String[]{"Create node", "Clear graph"});
@@ -141,9 +141,9 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
                 g.fillRect(i * 150, 0, 150, 600);
             }
         } else {
-            ((Graphics2D)g).setPaint(backgroundPaint);
+            ((Graphics2D) g).setPaint(backgroundPaint);
 //            g.setColor(Color.WHITE);
-            g.fillRect(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
+            g.fillRect(0, 0, FRAME_WIDTH + 10, FRAME_HEIGHT + 10);
             ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g.setColor(Color.BLACK);
             for (Edge e : graph.getEdges()) {
@@ -172,13 +172,13 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
                 else
                     g.setColor(verticesColors.get(i));
                 g.fillOval((int) v.getX() - VERTEX_SIZE / 2, (int) v.getY() - VERTEX_SIZE / 2, VERTEX_SIZE, VERTEX_SIZE);
-                if(g.getColor()==Color.BLACK)
+                if (g.getColor() == Color.BLACK)
                     g.setColor(Color.WHITE);
                 else
                     g.setColor(Color.BLACK);
                 g.drawOval((int) v.getX() - VERTEX_SIZE / 2, (int) v.getY() - VERTEX_SIZE / 2, VERTEX_SIZE, VERTEX_SIZE);
-                if(v.getName().length()>1)
-                    g.drawString(v.getName(), (int) v.getX(), (int) v.getY()- VERTEX_SIZE/2 - 1);
+                if (v.getName().length() > 1)
+                    g.drawString(v.getName(), (int) v.getX(), (int) v.getY() - VERTEX_SIZE / 2 - 1);
                 else
                     g.drawString(v.getName(), (int) v.getX() - 10 * v.getName().length() / 2, (int) v.getY() + 5);
                 if (v == editVertex) {
@@ -191,13 +191,16 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
                 }
             }
         }
+        g.setColor(Color.BLACK);
+        g.drawString("by Шаломов Артем ", 5, FRAME_HEIGHT - 35);
+        g.drawString("Юсковец Антай", 23, FRAME_HEIGHT - 20);
+        g.drawString("Петров Сергей", 23, FRAME_HEIGHT - 5);
         if (vertexMenu.isVisible) vertexMenu.draw(g);
         if (canvasMenu.isVisible) canvasMenu.draw(g);
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-//        System.out.println("drag "+e.getX() + "\t" + e.getY());
         if (selectedVertex != null) {
             selectedVertex.setX(e.getX());
             selectedVertex.setY(e.getY());
@@ -211,14 +214,13 @@ public class DrawPanel extends JPanel implements MouseMotionListener {
             vertexMenu.updateMousePosition(e.getX(), e.getY());
         if (canvasMenu.isVisible)
             canvasMenu.updateMousePosition(e.getX(), e.getY());
-        //System.out.println("move "+e.getX() + "\t" + e.getY());
-
     }
-    private String getUniqueVerticeName(Vertex vertexToName){
+
+    private String getUniqueVerticeName(Vertex vertexToName) {
         String result;
         validation:
         while (true) {
-            result = JOptionPane.showInputDialog(null, "Write vertex name", vertexToName!=null?vertexToName.getName():"");//"", JOptionPane.QUESTION_MESSAGE);
+            result = JOptionPane.showInputDialog(null, "Write vertex name", vertexToName != null ? vertexToName.getName() : "");//"", JOptionPane.QUESTION_MESSAGE);
             if (result != null && result.length() > 0) {
                 for (var v : graph.getVertices()) {
                     if (v != vertexToName && v.getName().equals(result)) {
