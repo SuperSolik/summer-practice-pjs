@@ -21,7 +21,6 @@ public class GraphAlgoTest extends TestCase {
 
         // randomGraph
         randomGraph = new Graph();
-        randomGraph.onModify(() -> {});
         Random r = new Random();
         int min = 5;
         int max = 100;
