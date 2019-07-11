@@ -63,7 +63,7 @@ public class Graph {
         if(getVertex(name) == null){
             Vertex v = new Vertex(name, x, y);
             vertices.add(v);
-            listener.performAction();
+            if (listener != null) listener.performAction();
             return true;
         }
         return false;
@@ -80,7 +80,7 @@ public class Graph {
         Edge e = new Edge(from, to);
         from.addEdge(e);
         edges.add(e);
-        listener.performAction();
+        if (listener != null) listener.performAction();
         return true;
     }
 
@@ -89,7 +89,7 @@ public class Graph {
         Edge e = new Edge(src, dest);
         src.addEdge(e);
         edges.add(e);
-        listener.performAction();
+        if (listener != null) listener.performAction();
         return true;
     }
     public boolean removeEdge(Vertex src, Vertex dest){
@@ -97,14 +97,14 @@ public class Graph {
         Edge delEdge = src.getEdge(dest);
         src.getEdges().remove(delEdge);
         edges.remove(delEdge);
-        listener.performAction();
+        if (listener != null) listener.performAction();
         return true;
     }
     public boolean removeVertex(Vertex v){
         if(!vertices.contains(v)) return false;
         vertices.remove(v);
         edges.removeIf(e -> e.getDest() ==v || e.getSource() == v);
-        listener.performAction();
+        if (listener != null) listener.performAction();
         return true;
     }
 
