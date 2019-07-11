@@ -5,11 +5,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
+import java.util.List;
 
 public class GraphAlgoTest extends TestCase {
     private Graph randomGraph;
@@ -91,6 +90,23 @@ public class GraphAlgoTest extends TestCase {
     }
 
     @Test
+    public void testDFS1Timeout() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Name");
+        VerticesList list = new VerticesList(model);
+
+        for(Vertex v : graph.getVertices()){
+            v.setColor(Color.WHITE);
+        }
+        algo.DFS1_step(graph, list);
+        List<String> expected = Arrays.asList("A", "B", "E", "C", "D", "H", "G", "F");
+        Iterator it = expected.iterator();
+        while(list.hasNext() && it.hasNext()){
+            assertEquals(it.next(), list.getNext().getName());
+        }
+    }
+
+    @Test
     public void testDFS2() {
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("Name");
@@ -130,5 +146,41 @@ public class GraphAlgoTest extends TestCase {
         randomGraph.clear();
         assertEquals(0, randomGraph.getVertices().size());
         assertEquals(0, randomGraph.getEdges().size());
+    }
+
+    @Test
+    public void testAddVertex() {
+        String name = "Vertex #" + randomGraph.getVertices().size() + 1;
+        assertTrue(randomGraph.createVertex(name));
+        assertFalse(randomGraph.createVertex(name));
+    }
+
+    @Test
+    public void testRemoveVertex() {
+        Random r = new Random();
+        Vertex v = randomGraph.getVertices().get(r.nextInt(randomGraph.getVertices().size()));
+        assertTrue(randomGraph.removeVertex(v));
+        assertFalse(randomGraph.removeVertex(v));
+    }
+
+    @Test
+    public void testAddEdge() {
+        Random r = new Random();
+        Vertex from = randomGraph.getVertices().get(r.nextInt(randomGraph.getVertices().size()));
+        Vertex to = randomGraph.getVertices().get(r.nextInt(randomGraph.getVertices().size()));
+        assertTrue(randomGraph.createEdge(from, to));
+        assertFalse(randomGraph.createEdge(from, to));
+    }
+
+    @Test
+    public void testRemoverEdge() {
+        Random r = new Random();
+        Vertex from = randomGraph.getVertices().get(r.nextInt(randomGraph.getVertices().size()));
+        while(from.getEdges().size() < 1){ //ищем вершину с ребром
+            randomGraph.getVertices().get(r.nextInt(randomGraph.getVertices().size()));
+        }
+        Vertex to = from.getEdges().get(0).getDest();
+        assertTrue(randomGraph.removeEdge(from, to));
+        assertFalse(randomGraph.removeEdge(from, to));
     }
 }
