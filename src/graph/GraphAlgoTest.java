@@ -38,7 +38,7 @@ public class GraphAlgoTest extends TestCase {
     }
 
     @Test
-    public void testDFS1() {
+    public void DFS1VisitAllVertices() {
         for(Vertex v : g.getVertices()){
             v.setColor(Color.WHITE);
         }
@@ -46,6 +46,11 @@ public class GraphAlgoTest extends TestCase {
         for(Vertex v : g.getVertices()){
             assertEquals(v.getColor(), Color.BLACK);
         }
+    }
+
+    @Test
+    public void testDFS2() {
+
     }
 
     @Test
