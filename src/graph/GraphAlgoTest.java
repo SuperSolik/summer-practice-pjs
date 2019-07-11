@@ -7,8 +7,8 @@ import org.junit.Test;
 
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class GraphAlgoTest extends TestCase {
     private Graph randomGraph;
@@ -30,7 +30,8 @@ public class GraphAlgoTest extends TestCase {
         for(int i = 0; i < vert; i++)
             randomGraph.createVertex(String.valueOf(i));
 
-        for(int i = 0; i < vert; i++){
+        randomGraph.createEdge(String.valueOf(0), String.valueOf(1));
+        for(int i = 1; i < vert; i++){
             from = r.nextInt(vert);
             to = r.nextInt(vert);
             randomGraph.createEdge(String.valueOf(from), String.valueOf(to));
@@ -166,18 +167,22 @@ public class GraphAlgoTest extends TestCase {
     @Test
     public void testAddEdge() {
         Random r = new Random();
-        Vertex from = randomGraph.getVertices().get(r.nextInt(randomGraph.getVertices().size()));
-        Vertex to = randomGraph.getVertices().get(r.nextInt(randomGraph.getVertices().size()));
-        assertTrue(randomGraph.createEdge(from, to));
-        assertFalse(randomGraph.createEdge(from, to));
+        String name = randomGraph.getVertices().size()+"";
+        randomGraph.createVertex(name + 1);
+        randomGraph.createVertex(name + 2);
+        assertTrue(randomGraph.createEdge(name + 1, name + 2));
+        assertFalse(randomGraph.createEdge(name + 1, name + 2));
     }
 
     @Test
     public void testRemoveEdge() {
         Random r = new Random();
-        Vertex from = randomGraph.getVertices().get(r.nextInt(randomGraph.getVertices().size()));
-        while(from.getEdges().size() < 1){ //ищем вершину с ребром
-            randomGraph.getVertices().get(r.nextInt(randomGraph.getVertices().size()));
+        Vertex from = null;
+        for(Vertex v : randomGraph.getVertices()){
+            if(v.getEdges().size() > 0){
+                from = v;
+                break;
+            }
         }
         Vertex to = from.getEdges().get(0).getDest();
         assertTrue(randomGraph.removeEdge(from, to));
