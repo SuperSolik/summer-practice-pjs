@@ -7,30 +7,68 @@ import org.junit.Test;
 
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class GraphAlgoTest extends TestCase {
-    private Graph g;
+    private Graph randomGraph;
+    private Graph graph;
     private GraphAlgo algo;
 
     @Before
     public void setUp() throws Exception {
-        g = new Graph();
         algo = new GraphAlgo();
-        g.onModify(() -> {});
+
+        // randomGraph
+        randomGraph = new Graph();
+        randomGraph.onModify(() -> {});
         Random r = new Random();
         int min = 5;
         int max = 100;
         int vert = min + r.nextInt(max-min+1);
         int from, to;
         for(int i = 0; i < vert; i++)
-            g.createVertex(String.valueOf(i));
+            randomGraph.createVertex(String.valueOf(i));
 
         for(int i = 0; i < vert; i++){
             from = r.nextInt(vert);
             to = r.nextInt(vert);
-            g.createEdge(String.valueOf(from), String.valueOf(to));
+            randomGraph.createEdge(String.valueOf(from), String.valueOf(to));
         }
+
+        // special graph
+        graph = new Graph();
+        graph.createVertex("A");
+        graph.createVertex("B");
+        graph.createVertex("C");
+        graph.createVertex("D");
+        graph.createVertex("E");
+        graph.createVertex("F");
+        graph.createVertex("G");
+        graph.createVertex("H");
+
+        graph.createEdge("A", "B");
+
+        graph.createEdge("B", "C");
+        graph.createEdge("B", "E");
+        graph.createEdge("B", "F");
+
+        graph.createEdge("C", "D");
+        graph.createEdge("C", "G");
+
+        graph.createEdge("D", "H");
+        graph.createEdge("D", "C");
+
+        graph.createEdge("E", "A");
+        graph.createEdge("E", "F");
+
+        graph.createEdge("F", "G");
+
+        graph.createEdge("G", "F");
+
+        graph.createEdge("H", "G");
+        graph.createEdge("H", "D");
     }
 
     @After
@@ -39,11 +77,11 @@ public class GraphAlgoTest extends TestCase {
 
     @Test
     public void DFS1VisitAllVertices() {
-        for(Vertex v : g.getVertices()){
+        for(Vertex v : randomGraph.getVertices()){
             v.setColor(Color.WHITE);
         }
-        algo.DFS1_step(g, new VerticesList(new DefaultTableModel()));
-        for(Vertex v : g.getVertices()){
+        algo.DFS1_step(randomGraph, new VerticesList(new DefaultTableModel()));
+        for(Vertex v : randomGraph.getVertices()){
             assertEquals(v.getColor(), Color.BLACK);
         }
     }
@@ -55,8 +93,8 @@ public class GraphAlgoTest extends TestCase {
 
     @Test
     public void testClear() {
-        g.clear();
-        assertEquals(0, g.getVertices().size());
-        assertEquals(0, g.getEdges().size());
+        randomGraph.clear();
+        assertEquals(0, randomGraph.getVertices().size());
+        assertEquals(0, randomGraph.getEdges().size());
     }
 }
