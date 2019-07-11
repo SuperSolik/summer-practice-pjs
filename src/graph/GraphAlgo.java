@@ -10,9 +10,11 @@ public class GraphAlgo {
     private ArrayList<ArrayList<Color>> states;
     private Graph graph;
 
-    public GraphAlgo() { }
+    public GraphAlgo() {
+        states = new ArrayList<>(); //иначе отдельный тест dfs крашится + так логичнее чем каждый рах перевыделять в алгосе
+    }
 
-    private void DFS1_step(Graph graph, VerticesList list) {
+    public void DFS1_step(Graph graph, VerticesList list) {
         //красит только из белого в черный
         this.graph = graph;
         states.add(createState());
@@ -24,7 +26,7 @@ public class GraphAlgo {
     }
 
 
-    private void DFS2_step(Graph graph, VerticesList list) {
+    public void DFS2_step(Graph graph, VerticesList list) {
         states.add(createState());
         this.graph = graph;
 
@@ -56,7 +58,7 @@ public class GraphAlgo {
     }
 
     public ArrayList<ArrayList<Color>> Kosaraju(Graph graph, VerticesList list){
-        states = new ArrayList<>();
+        states.clear();
         list.clear();
 
         for(Vertex v : graph.getVertices()){

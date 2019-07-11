@@ -5,6 +5,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.util.Random;
 
 public class GraphAlgoTest extends TestCase {
@@ -29,7 +31,6 @@ public class GraphAlgoTest extends TestCase {
             to = r.nextInt(vert);
             g.createEdge(String.valueOf(from), String.valueOf(to));
         }
-        System.out.println(g);
     }
 
     @After
@@ -37,7 +38,20 @@ public class GraphAlgoTest extends TestCase {
     }
 
     @Test
-    public void testKosaraju() {
+    public void testDFS1() {
+        for(Vertex v : g.getVertices()){
+            v.setColor(Color.WHITE);
+        }
+        algo.DFS1_step(g, new VerticesList(new DefaultTableModel()));
+        for(Vertex v : g.getVertices()){
+            assertEquals(v.getColor(), Color.BLACK);
+        }
+    }
 
+    @Test
+    public void testClear() {
+        g.clear();
+        assertEquals(0, g.getVertices().size());
+        assertEquals(0, g.getEdges().size());
     }
 }
