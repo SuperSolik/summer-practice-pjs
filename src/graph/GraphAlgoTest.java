@@ -8,6 +8,7 @@ import org.junit.Test;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class GraphAlgoTest extends TestCase {
@@ -75,7 +76,7 @@ public class GraphAlgoTest extends TestCase {
     }
 
     @Test
-    public void DFS1VisitAllVertices() {
+    public void testDFS1VisitAllVertices() {
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("Name");
         VerticesList list = new VerticesList(model);
@@ -95,7 +96,33 @@ public class GraphAlgoTest extends TestCase {
         model.addColumn("Name");
         VerticesList list = new VerticesList(model);
 
+        ArrayList<ArrayList<Color>> states = algo.Kosaraju(graph, list);
+        ArrayList<Color> lastState = states.get(states.size()-1);
 
+        // (A, B, E) (C, D, H) (F, G)
+        for (int i = 0; i != lastState.size(); ++i) {
+            graph.getVertices().get(i).setColor(lastState.get(i));
+        }
+
+        Color aColor = graph.getVertex("A").getColor();
+        Color bColor = graph.getVertex("B").getColor();
+        Color cColor = graph.getVertex("C").getColor();
+        Color dColor = graph.getVertex("D").getColor();
+        Color eColor = graph.getVertex("E").getColor();
+        Color fColor = graph.getVertex("F").getColor();
+        Color gColor = graph.getVertex("G").getColor();
+        Color hColor = graph.getVertex("H").getColor();
+
+        // (A, B, E)
+        assertEquals(aColor, bColor);
+        assertEquals(bColor, eColor);
+
+        // (C, D, H)
+        assertEquals(cColor, dColor);
+        assertEquals(dColor, hColor);
+
+        // (F, G)
+        assertEquals(fColor, gColor);
     }
 
     @Test
