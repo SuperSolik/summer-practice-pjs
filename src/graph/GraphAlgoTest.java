@@ -173,7 +173,7 @@ public class GraphAlgoTest extends TestCase {
     }
 
     @Test
-    public void testRemoverEdge() {
+    public void testRemoveEdge() {
         Random r = new Random();
         Vertex from = randomGraph.getVertices().get(r.nextInt(randomGraph.getVertices().size()));
         while(from.getEdges().size() < 1){ //ищем вершину с ребром
