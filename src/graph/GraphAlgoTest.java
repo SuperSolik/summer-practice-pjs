@@ -5,10 +5,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Random;
 
 public class GraphAlgoTest extends TestCase {
@@ -77,10 +76,14 @@ public class GraphAlgoTest extends TestCase {
 
     @Test
     public void DFS1VisitAllVertices() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Name");
+        VerticesList list = new VerticesList(model);
+
         for(Vertex v : randomGraph.getVertices()){
             v.setColor(Color.WHITE);
         }
-        algo.DFS1_step(randomGraph, new VerticesList(new DefaultTableModel()));
+        algo.DFS1_step(randomGraph, list);
         for(Vertex v : randomGraph.getVertices()){
             assertEquals(v.getColor(), Color.BLACK);
         }
@@ -88,6 +91,10 @@ public class GraphAlgoTest extends TestCase {
 
     @Test
     public void testDFS2() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Name");
+        VerticesList list = new VerticesList(model);
+
 
     }
 
