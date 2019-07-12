@@ -36,6 +36,7 @@ class MainWindow extends JFrame implements Listener {
         setSize(950, 655); //поменять потом
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Kosaraju algorithm");
+        setResizable(false);
         panel = new DrawPanel(graph);
         panel.setMinimumSize(new Dimension(600, 600));
         JPanel rightPanel = new JPanel();
