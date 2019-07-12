@@ -145,10 +145,12 @@ class MainWindow extends JFrame implements Listener {
         // settings menu
 //        JMenu settingsMenu = new JMenu("Settings");
         JMenu helpMenu = new JMenu("About");
-        item = new JMenuItem(new FunctionalAction(e-> openHtmlViewer(new File("./doc/help.htm"))));
+        item = new JMenuItem(new FunctionalAction(e-> openHtmlViewer(
+                new File( "doc"+File.separator +"help.htm"))));
         item.setText("Help");
         helpMenu.add(item);
-        item = new JMenuItem(new FunctionalAction(e-> openHtmlViewer(new File("./doc/author.htm"))));
+        item = new JMenuItem(new FunctionalAction(e-> openHtmlViewer(
+                new File(  "doc"+File.separator +"author.htm"))));
         item.setText("Authors");
         helpMenu.add(item);
         menuBar.add(fileMenu);
